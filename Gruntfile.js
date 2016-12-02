@@ -11,6 +11,10 @@ module.exports = function(grunt) {
             command: 'tsc'
           },
 
+          setTestDB: {
+            command: `DB='test' node server/server.js`
+          },
+
           serve: {
             command: 'lite-server'
           },
@@ -90,17 +94,17 @@ module.exports = function(grunt) {
 
     grunt.loadNpmTasks('grunt-browser-sync');
     grunt.loadNpmTasks('grunt-shell');
-    grunt.loadNpmTasks('grunt-ts');
     //grunt.loadNpmTasks('grunt-karma');
     grunt.loadNpmTasks('grunt-tsc');
     grunt.loadNpmTasks('grunt-contrib-copy');
     grunt.loadNpmTasks('grunt-contrib-watch');
     grunt.loadNpmTasks('grunt-server-mocha');
 
-    grunt.registerTask('sync',['copy','shell:tsc','browserSync','watch']);
-    grunt.registerTask('test',['shell:test']);
-    grunt.registerTask('testDB',['shell:testDB']);
+    //grunt.registerTask('test',['shell:test']);
     grunt.registerTask('default',['copy','shell:tsc','watch']);
     grunt.registerTask('production',['copy', 'shell:tsc']);
+    grunt.registerTask('testServer',['shell:setTestDB']);
+    grunt.registerTask('test',['shell:testDB']);
+
 
 };

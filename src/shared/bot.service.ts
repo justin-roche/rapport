@@ -34,7 +34,6 @@ export class BotService {
           self.decorateAll(self.userBots);
           self.scheduled = self.joinScheduledTaskDescriptions(self.userBots);
           self.recent = self.joinRecentTaskDescriptions(self.userBots);
-
           return self.userBots;
         } else {
           self.userBots = [];
@@ -310,24 +309,8 @@ export class BotService {
 
   //<-----------------GETTERS AND SETTERS----------------->
 
-  public getDisplayName(bot){
-    if(bot.botName !== 'MyBot'){
-      return bot.botName;
-    } else {
-      return bot.botType;
-    }
-  }
-
   public sendNow(){
     return this.http.get('/api/runalltasks').toPromise();
-  }
-
-  public getUserBots(){
-    return this.userBots || [];
-  }
-
-  public returnContacts(){
-    return this.contacts || [];
   }
 
   public addBotTypeToUser(bot: any){
