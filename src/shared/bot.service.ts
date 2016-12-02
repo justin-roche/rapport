@@ -136,27 +136,11 @@ export class BotService {
   }
 
   public getBotTypes(){
-    let token = localStorage.getItem('id_token');
-    let id = localStorage.getItem('user_id');
-    var self = this;
     return this.http.get(`/api/botTypes`)
-      .map(function(data: any) {
-          self.botTypes = JSON.parse(data._body).bots;
-          self.decorateAll(self.botTypes);
-          return self.botTypes;
-      })
-      .toPromise();
-  }
-
-  public getTasks() {
-    let userId = localStorage.getItem('user_id');
-
-    this.http.get(`/api/tasks?userId=${userId}`)
-      .map((data: any) => {
-        data = data.json();
-        //?
-        this.contacts = data;
-        return data;
+      .map((data: any)=>{
+          this.botTypes = JSON.parse(data._body).bots;
+          this.decorateAll(this.botTypes);
+          return this.botTypes;
       })
       .toPromise();
   }
