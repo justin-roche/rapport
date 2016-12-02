@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Http, Headers } from '@angular/http';
 import { customBot, gmailContact } from '../shared/custom-type-classes';
+import {BehaviorSubject} from 'rxjs/BehaviorSubject';
 //import { BOTS } from '../data/mock-bots';
 
 @Injectable()
@@ -20,17 +21,85 @@ export class BotService {
   public userId;
   private headers = {headers: new Headers({'Content-Type': 'application/json'})};
 
+  private initialState = {
+    selectedBot: null,
+    activities: null,
+    selectedTasks: null,
+    availableContacts: null,
+  }
+  public state = new BehaviorSubject(this.initialState);
+ 
   constructor(private http: Http) {
 
   }
 
- //<----------------------BOT STATE CHANGES---------------------->
+  //<----------------------BOT SELECT---------------------->
+
+  public selectBot(bot){
+    var _state = this.state.getValue();
+    console.log(_state)
+    _state.selectedBot = bot;
+    _state.activities = bot.botActivity.recent;
+    _state.selectedTasks = bot.tasks;
+    if(_state.selectedBot.botType === 'social'){
+      _state.availableContacts = bot.selectedFbFriends;
+    } else {
+      _state.availableContacts = bot.selectedContacts;
+    }
+    this.state.next(_state);
+  }
+
+  //<----------------------SETUP---------------------->
+
+  public getInitialData(){
+    //add get tasks when api endpoint is implemented
+    return Promise.all([this.setUserVars(),this.getHolidays(), this.getAllTasks(), this.getBotTypes(), this.importUserBots()]);
+  }
+
+  private setUserVars(){
+    return new Promise((resolve,reject)=>{
+      this.token = localStorage.getItem('id_token');
+      this.userId = localStorage.getItem('user_id');
+      resolve();
+    });
+  }
+
+  private getHolidays(){
+    var d = new Date();
+    return this.http.get(`/api/holidays?year=${d.getFullYear()}`)
+      .toPromise()
+      .then((data) => {
+        this.holidays = data.json();
+      });
+  }
+
+  private getAllTasks(){
+      return this.http.get('/api/tasks')
+      .toPromise()
+      .then((data)=>{
+        this.allTasks = data.json();
+        this.extendTasks(this.allTasks);
+      });
+  }
+
+  private getBotTypes(){
+    return this.http.get(`/api/botTypes`)
+      .map((data: any)=>{
+          this.botTypes = JSON.parse(data._body).bots;
+          //decoration step
+          this.decorateAll(this.botTypes);
+          return this.botTypes;
+      })
+      .toPromise();
+  }
 
   public importUserBots(){
       this.$getBots()
       .then((bots)=>{
         if(bots.length !== 0) {
           this.userBots = bots;
+
+          //decoration step
           this.decorateAll(this.userBots);
           this.scheduled = this.joinScheduledTaskDescriptions(this.userBots);
           this.recent = this.joinRecentTaskDescriptions(this.userBots);
@@ -41,6 +110,9 @@ export class BotService {
       }
     });
   }
+
+ //<----------------------BOT STATE CHANGES---------------------->
+
 
   //public methods should not return anything
   public updateBots(userBotsArray){
@@ -60,99 +132,32 @@ export class BotService {
   public retireBot(selectedBot){
     return this.http.delete(`/api/bots?botId=${selectedBot.id}`)
     .toPromise()
-    .then(this.importUserBots.bind(this));
+    .then(this.importUserBots.bind(this))
   }
-
- //<----------------------BOT API CALLS---------------------->
-
-  public $getBots(){
-    return this.http.get(`/api/bots?userId=${this.userId}`)
-      .map(function(data: any) {
-        return JSON.parse(data._body);
-      })
-      .toPromise()
-  }
-
-  private $postBots(){
-    const body = JSON.stringify({bots: this.userBots});
-    return this.http.put(`/api/bots?userId=${this.userId}`, body, this.headers)
-    .toPromise()
-  }
-
-  private $deleteTasks(){
-    const body = JSON.stringify({tasks: this.deletedTasks});
-    return this.http.post('/api/tasks', body, this.headers)
-    .toPromise();
-  }
-
-  
 
   public sendNow(){
     return this.http.get('/api/runalltasks').toPromise();
   }
 
-   //<----------------------SETUP---------------------->
-
-  public getInitialData(){
-    //add get tasks when api endpoint is implemented
-    return Promise.all([this.setUserVars(),this.getHolidays(), this.getAllTasks(), this.getBotTypes(), this.importUserBots()]);
+  public addBotTypeToUser(bot: any){
+    this.userBots.push(bot);
   }
 
-  private setUserVars(){
-    return new Promise((resolve,reject)=>{
-      this.token = localStorage.getItem('id_token');
-      this.userId = localStorage.getItem('user_id');
-      resolve();
-    });
-  }
+  
 
-  private getHolidays(){
-    return this.http.get(`/api/holidays?year=${2016}`)
-      .map((data: any) => {
-        data = data.json();
-        this.holidays = data;
-        return data;
-      })
-      .toPromise();
-  }
-
-  private getAllTasks(){
-      return this.http.get('/api/tasks')
-      .toPromise()
-      .then((data)=>{
-        data = data.json();
-        this.allTasks = data;
-        this.extendTasks(this.allTasks);
-      });
-  }
-
-  private getBotTypes(){
-    return this.http.get(`/api/botTypes`)
-      .map((data: any)=>{
-          this.botTypes = JSON.parse(data._body).bots;
-          this.decorateAll(this.botTypes);
-          return this.botTypes;
-      })
-      .toPromise();
-  }
-
-   //<----------------------CONTACT REMOVAL---------------------->
+  //<----------------------CONTACT REMOVAL---------------------->
 
   public removeSelectedContact(contact){
     return this.http.delete(`/api/gmail/contacts?contactId=${contact.id}`).toPromise()
-    .then(_=>{
-      return this.importUserBots();
-    });
+    .then(this.importUserBots.bind(this));
   }
 
   public removeSelectedFbContact(contact){
     return this.http.delete(`/api/facebook/friends?contactId=${contact.id}`).toPromise()
-    .then(_=>{
-      return this.importUserBots();
-    });
+    .then(this.importUserBots.bind(this));
   }
 
-   //<----------------------TASK ADDITION---------------------->
+  //<----------------------TASK ADDITION---------------------->
 
   public addNewHolidayTask(taskOptions,bot){
     var date = this.holidays.filter(function(holiday){
@@ -175,13 +180,33 @@ export class BotService {
 
     bot.tasks.push(task);
   }
+  
+ //<----------------------BOT API CALLS---------------------->
 
+  private $getBots(){
+    return this.http.get(`/api/bots?userId=${this.userId}`)
+      .map(function(data: any) {
+        return JSON.parse(data._body);
+      })
+      .toPromise()
+  }
 
+  private $postBots(){
+    const body = JSON.stringify({bots: this.userBots});
+    return this.http.put(`/api/bots?userId=${this.userId}`, body, this.headers)
+    .toPromise()
+  }
+
+  private $deleteTasks(){
+    const body = JSON.stringify({tasks: this.deletedTasks});
+    return this.http.post('/api/tasks', body, this.headers)
+    .toPromise();
+  }
+
+ 
   //<----------------------DATA TRANSFORMATIONS FROM BACKEND TO FRONTEND---------------------->
 
-
-
-  public botExtensions = {
+  private botExtensions = {
     'basic': {
       deletedTasks: [], 
       potentialTasks: [],
@@ -199,7 +224,7 @@ export class BotService {
     }
   }
 
-  public decorateAll(bots){
+  private decorateAll(bots){
     var self = this;
     bots.forEach(function(bot){
       bot.decorated = JSON.parse(JSON.stringify(self.botExtensions[bot.botType]));
@@ -229,7 +254,7 @@ export class BotService {
     }
   }
 
-  public taskExtensions = {
+  private taskExtensions = {
     'sayHiGmail':           {formattedName: 'message on gmail',
                             setsDate: true, 
                             setsInterval: true,}, 
@@ -254,7 +279,7 @@ export class BotService {
                             holidays: true}, 
   };
 
-  public addPotentialTasks(bot){
+  private addPotentialTasks(bot){
     this.allTasks.forEach(function(_potentialTask){
       var potentialTask = JSON.parse(JSON.stringify(_potentialTask));
       var match = bot.tasks.some(function(botTask){
@@ -266,14 +291,14 @@ export class BotService {
     })
   }
 
-  public joinScheduledTaskDescriptions(bots){
+  private joinScheduledTaskDescriptions(bots){
     var tasks = bots.reduce(function(acc,bot){
       return acc.concat(bot.botActivity.scheduled);
     },[]);
     return tasks;
   }
 
-  public joinRecentTaskDescriptions(bots){
+  private joinRecentTaskDescriptions(bots){
     var recent = bots.reduce(function(acc,bot){
       return acc.concat(bot.botActivity.recent)
     },[]);
@@ -282,7 +307,7 @@ export class BotService {
 
 
   //<----------------------DATA TRANSFORMATIONS FROM FRONTEND TO BACKEND---------------------->
-  public normalizeDates(){
+  private normalizeDates(){
     this.userBots.forEach(function(bot){
       bot.selectedContacts.forEach(function(contact){
         if(contact.birthday){
@@ -301,12 +326,6 @@ export class BotService {
         }
       })
     })
-  }
-
-  //<-----------------GETTERS AND SETTERS----------------->
-
-  public addBotTypeToUser(bot: any){
-    this.userBots.push(bot);
   }
 
 }

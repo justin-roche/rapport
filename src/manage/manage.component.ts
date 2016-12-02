@@ -54,8 +54,8 @@ export class ManageComponent {
               private store: Store) {
 
    var self = this;
-   store.state.subscribe(function(){
-     self.reload();
+   botService.state.subscribe(function(){
+     
    })
 
 
@@ -100,17 +100,7 @@ export class ManageComponent {
   //<-------------------BOT METHODS------------------->
 
   private onSelectBot(bot: any): void {
-    this.selectedBot = bot;
-    this.activities = bot.botActivity.recent;
-
-    //these contacts are the selectedContacts for the bot, not the availableContacts
-    //should be componentized
-    if(this.selectedBot.botType === 'social'){
-      this.contacts = bot.selectedFbFriends;
-    } else {
-      this.contacts = bot.selectedContacts;
-    }
-    this.tasks = bot.tasks;
+    this.botService.selectBot(bot);
   }
 
   private submitAllSettings(): void{

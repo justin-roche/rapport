@@ -25,7 +25,7 @@ export class Store {
     }
 
     public trigger(){
-      this.state.next({});
+        this.state.next({});
     }
 
     public selectBot(bot){
