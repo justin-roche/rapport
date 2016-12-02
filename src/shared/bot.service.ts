@@ -16,8 +16,12 @@ export class BotService {
   public currentBot = null;
   public deletedTasks = [];
   public allTasks;
+  public token;
+  public userId;
 
-  constructor(private http: Http) {}
+  constructor(private http: Http) {
+    
+  }
 
  //<----------------------BOT STATE CHANGES---------------------->
 
@@ -46,11 +50,7 @@ export class BotService {
  //<----------------------BOT API CALLS---------------------->
 
   public getBots(){
-    let token = localStorage.getItem('id_token');
-    let userId = localStorage.getItem('user_id');
-    var self = this;
-
-    return this.http.get(`/api/bots?userId=${userId}`)
+    return this.http.get(`/api/bots?userId=${this.userId}`)
       .map(function(data: any) {
         var bots = JSON.parse(data._body);
         return bots;
@@ -103,7 +103,15 @@ export class BotService {
 
   public getInitialData(){
     //add get tasks when api endpoint is implemented
-    return Promise.all([this.getHolidays(), this.getAllTasks(), this.getBotTypes(), this.importUserBots()]);
+    return Promise.all([this.setUserVars(),this.getHolidays(), this.getAllTasks(), this.getBotTypes(), this.importUserBots()]);
+  }
+
+  public setUserVars(){
+    return new Promise((resolve,reject)=>{
+      this.token = localStorage.getItem('id_token');
+      this.userId = localStorage.getItem('user_id');
+      resolve();
+    });
   }
 
   public getHolidays(){
@@ -112,7 +120,8 @@ export class BotService {
         data = data.json();
         this.holidays = data;
         return data;
-      }).toPromise();
+      })
+      .toPromise();
   }
 
   public getAllTasks(){
@@ -135,7 +144,8 @@ export class BotService {
           self.botTypes = JSON.parse(data._body).bots;
           self.decorateAll(self.botTypes);
           return self.botTypes;
-      }).toPromise();
+      })
+      .toPromise();
   }
 
   public getTasks() {
@@ -147,7 +157,8 @@ export class BotService {
         //?
         this.contacts = data;
         return data;
-      }).toPromise();
+      })
+      .toPromise();
   }
 
    //<----------------------CONTACT REMOVAL---------------------->
