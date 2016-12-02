@@ -19,12 +19,16 @@ module.exports = function(grunt) {
             command: 'lite-server'
           },
 
+          loadTestDb: {
+            command: `mysql -u root -p < ${__dirname}/spec/test-schema.sql`
+          },
+
           test: {
             command: 'node server/server.js && mocha '+__dirname+'/spec/serverSpec.js'
           },
 
           testDB: {
-            command: 'mocha '+__dirname+'/spec/integration-tests/dbSpec.js'
+            command: 'mocha ' + __dirname + '/spec/integration-tests/dbSpec.js'
           },
 
           electroncompile:{
@@ -100,7 +104,10 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-contrib-watch');
     grunt.loadNpmTasks('grunt-server-mocha');
 
-    //grunt.registerTask('test',['shell:test']);
+    grunt.registerTask('sync',['copy','shell:tsc','browserSync','watch']);
+    grunt.registerTask('test',['shell:test']);
+    grunt.registerTask('testDB',['shell:testDB']);
+    grunt.registerTask('test:local', ['shell:loadTestDb', 'shell:testDB']);
     grunt.registerTask('default',['copy','shell:tsc','watch']);
     grunt.registerTask('production',['copy', 'shell:tsc']);
     grunt.registerTask('testServer',['shell:setTestDB']);

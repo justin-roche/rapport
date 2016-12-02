@@ -166,7 +166,8 @@ export class ManageComponent {
 
   private sendNow(): void {
     this.botService.sendNow()
-      .then(console.log);
+      .then(console.log)
+      .then(() => this.botService.importUserBots());
   }
 
   private reload() : void {
