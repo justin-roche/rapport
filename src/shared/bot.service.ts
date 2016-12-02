@@ -18,15 +18,16 @@ export class BotService {
   public allTasks;
   public token;
   public userId;
+  private headers = {headers: new Headers({'Content-Type': 'application/json'})};
 
   constructor(private http: Http) {
-    
+
   }
 
  //<----------------------BOT STATE CHANGES---------------------->
 
   public importUserBots(){
-      this.getBots()
+      this.$getBots()
       .then((bots)=>{
         if(bots.length !== 0) {
           this.userBots = bots;
@@ -41,59 +42,50 @@ export class BotService {
     });
   }
 
+  //public methods should not return anything
   public updateBots(userBotsArray){
+    //undecoration step
     this.normalizeDates();
-    return this.deleteTasks()
-    .then(this.postBots.bind(this));
+
+    return this.$deleteTasks()
+    .then(()=>{
+      this.deletedTasks = [];
+    })
+    .then(this.$postBots.bind(this))
+    .then(this.importUserBots.bind(this))
+
+  }
+
+  //selectedBot should exist on store
+  public retireBot(selectedBot){
+    return this.http.delete(`/api/bots?botId=${selectedBot.id}`)
+    .toPromise()
+    .then(this.importUserBots.bind(this));
   }
 
  //<----------------------BOT API CALLS---------------------->
 
-  public getBots(){
+  public $getBots(){
     return this.http.get(`/api/bots?userId=${this.userId}`)
       .map(function(data: any) {
-        var bots = JSON.parse(data._body);
-        return bots;
-        })
+        return JSON.parse(data._body);
+      })
       .toPromise()
   }
 
-  public postBots(){
-    var self = this;
-    const userId = localStorage.getItem('user_id');
+  private $postBots(){
     const body = JSON.stringify({bots: this.userBots});
-    const headers = new Headers({'Content-Type': 'application/json'});
-
-    return this.http.put(`/api/bots?userId=${userId}`, body, {headers: headers})
-        .toPromise()
-        .then(()=>{
-          return self.importUserBots();
-        })
-        .catch((err)=>{
-          console.log(err);
-        })
-  }
-
-  public deleteTasks(){
-    //userID must be factored out
-    const userId = localStorage.getItem('user_id');
-    const body = JSON.stringify({tasks: this.deletedTasks});
-    //factor out headers
-    const headers = new Headers({'Content-Type': 'application/json'});
-
-    var r = this.http.post('/api/tasks', body, {headers: headers})
-    .toPromise();
-    this.deletedTasks = [];
-    return r;
-  }
-
-  public retireBot(selectedBot){
-    var self = this;
-    const userId = localStorage.getItem('user_id');
-    return this.http.delete(`/api/bots?botId=${selectedBot.id}`)
+    return this.http.put(`/api/bots?userId=${this.userId}`, body, this.headers)
     .toPromise()
-    .then(self.importUserBots.bind(self));
   }
+
+  private $deleteTasks(){
+    const body = JSON.stringify({tasks: this.deletedTasks});
+    return this.http.post('/api/tasks', body, this.headers)
+    .toPromise();
+  }
+
+  
 
   public sendNow(){
     return this.http.get('/api/runalltasks').toPromise();
@@ -106,7 +98,7 @@ export class BotService {
     return Promise.all([this.setUserVars(),this.getHolidays(), this.getAllTasks(), this.getBotTypes(), this.importUserBots()]);
   }
 
-  public setUserVars(){
+  private setUserVars(){
     return new Promise((resolve,reject)=>{
       this.token = localStorage.getItem('id_token');
       this.userId = localStorage.getItem('user_id');
@@ -114,7 +106,7 @@ export class BotService {
     });
   }
 
-  public getHolidays(){
+  private getHolidays(){
     return this.http.get(`/api/holidays?year=${2016}`)
       .map((data: any) => {
         data = data.json();
@@ -124,18 +116,17 @@ export class BotService {
       .toPromise();
   }
 
-  public getAllTasks(){
-      var self = this;
+  private getAllTasks(){
       return this.http.get('/api/tasks')
       .toPromise()
-      .then(function(data){
+      .then((data)=>{
         data = data.json();
-        self.allTasks = data;
-        self.extendTasks(self.allTasks);
+        this.allTasks = data;
+        this.extendTasks(this.allTasks);
       });
   }
 
-  public getBotTypes(){
+  private getBotTypes(){
     return this.http.get(`/api/botTypes`)
       .map((data: any)=>{
           this.botTypes = JSON.parse(data._body).bots;
@@ -148,7 +139,6 @@ export class BotService {
    //<----------------------CONTACT REMOVAL---------------------->
 
   public removeSelectedContact(contact){
-    const userId = localStorage.getItem('user_id');
     return this.http.delete(`/api/gmail/contacts?contactId=${contact.id}`).toPromise()
     .then(_=>{
       return this.importUserBots();
@@ -156,7 +146,6 @@ export class BotService {
   }
 
   public removeSelectedFbContact(contact){
-    const userId = localStorage.getItem('user_id');
     return this.http.delete(`/api/facebook/friends?contactId=${contact.id}`).toPromise()
     .then(_=>{
       return this.importUserBots();
@@ -315,8 +304,6 @@ export class BotService {
   }
 
   //<-----------------GETTERS AND SETTERS----------------->
-
-  
 
   public addBotTypeToUser(bot: any){
     this.userBots.push(bot);
