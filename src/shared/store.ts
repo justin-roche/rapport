@@ -7,6 +7,7 @@ import { BotService } from '../shared/bot.service';
 export class Store {
 
   private initialState = {
+    appUserInfo: null,
     bots: {
       selectedBot: null,
       userBots: null,
@@ -24,10 +25,15 @@ export class Store {
 
     
 
-  public dispatch(name,payload){
-    //deep copy state here
-    //loses reference to the object you are trying to change?
-    switch(name){
+  public dispatch(type,payload){
+    var state = this.state.getValue();
+    switch(type){
+      case 'SET':
+        for(var prop in payload){
+          state[prop] = payload[prop];
+        }
+        this.state.next(state);
+        break;
       case 'DELETE-TASK': 
         payload.bot.tasks = payload.bot.tasks.filter(function(task){
           return task !== payload.task;

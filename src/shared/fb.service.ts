@@ -2,6 +2,7 @@ import { Injectable }      from '@angular/core';
 import { tokenNotExpired } from 'angular2-jwt';
 import { Headers, Http, RequestOptions } from '@angular/http';
 import { Router } from '@angular/router';
+import { Store } from '../shared/store';
 
 import 'rxjs/add/operator/take';
 import 'rxjs/add/operator/toPromise';
@@ -13,8 +14,15 @@ export class FbService {
 
     public contacts: Array<any>;
 
-    constructor(private http: Http){
+    constructor(private store: Store, private http: Http){
 
+    }
+
+    public tryContacts(){
+        var fbCredentials = this.store.state.getValue().appUserInfo.fbCredentials;
+        if(fbCredentials){
+            return this.getContacts(this.store.state.getValue().appUserInfo.id);
+        }  
     }
 
     public login(fbUsername: String, fbPassword: String){
