@@ -47,7 +47,7 @@ export class Auth {
         console.log("user info", userInfo);
         localStorage.setItem('user_id',userInfo.id);
         userObj = userInfo;
-        this.botService.getBots()
+        this.botService.getInitialData()
           .then(arrayOfResolves => userBots = arrayOfResolves[3])
           .then(() => this.gmailService.getContacts())
           .then(() => {
@@ -70,7 +70,7 @@ export class Auth {
   }
 
   public redirectForUserType(userObj, userBots) {
-    if(userObj.newUser || !userBots){
+    if(userObj.newUser || this.botService.userBots.length===0){
       this.router.navigate(['setup']);
     } else {
       this.router.navigate(['manage']);

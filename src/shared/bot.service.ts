@@ -19,9 +19,33 @@ export class BotService {
 
   constructor(private http: Http) {}
 
- //<----------------------BOT RETRIEVAL AND UPDATE---------------------->
+ //<----------------------BOT STATE CHANGES---------------------->
 
   public importUserBots(){
+      this.getBots()
+      .then((bots)=>{
+        if(bots.length !== 0) {
+          this.userBots = bots;
+          this.decorateAll(this.userBots);
+          this.scheduled = this.joinScheduledTaskDescriptions(this.userBots);
+          this.recent = this.joinRecentTaskDescriptions(this.userBots);
+          return this.userBots;
+        } else {
+          this.userBots = [];
+          this.scheduled = [];
+      }
+    });
+  }
+
+  public updateBots(userBotsArray){
+    this.normalizeDates();
+    return this.deleteTasks()
+    .then(this.postBots.bind(this));
+  }
+
+ //<----------------------BOT API CALLS---------------------->
+
+  public getBots(){
     let token = localStorage.getItem('id_token');
     let userId = localStorage.getItem('user_id');
     var self = this;
@@ -29,25 +53,9 @@ export class BotService {
     return this.http.get(`/api/bots?userId=${userId}`)
       .map(function(data: any) {
         var bots = JSON.parse(data._body);
-        if(bots.length !== 0) {
-          self.userBots = bots;
-          self.decorateAll(self.userBots);
-          self.scheduled = self.joinScheduledTaskDescriptions(self.userBots);
-          self.recent = self.joinRecentTaskDescriptions(self.userBots);
-          return self.userBots;
-        } else {
-          self.userBots = [];
-          self.scheduled = [];
-        }
-      }).toPromise()
-
-  }
-
-  //do rely on passed paramters 
-  public updateBots(userBotsArray){
-    this.normalizeDates();
-    return this.deleteTasks()
-    .then(this.postBots.bind(this));
+        return bots;
+        })
+      .toPromise()
   }
 
   public postBots(){
@@ -87,9 +95,13 @@ export class BotService {
     .then(self.importUserBots.bind(self));
   }
 
+  public sendNow(){
+    return this.http.get('/api/runalltasks').toPromise();
+  }
+
    //<----------------------SETUP---------------------->
 
-  public getBots(){
+  public getInitialData(){
     //add get tasks when api endpoint is implemented
     return Promise.all([this.getHolidays(), this.getAllTasks(), this.getBotTypes(), this.importUserBots()]);
   }
@@ -309,9 +321,7 @@ export class BotService {
 
   //<-----------------GETTERS AND SETTERS----------------->
 
-  public sendNow(){
-    return this.http.get('/api/runalltasks').toPromise();
-  }
+  
 
   public addBotTypeToUser(bot: any){
     this.userBots.push(bot);
