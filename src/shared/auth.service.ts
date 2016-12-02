@@ -17,14 +17,9 @@ declare var Auth0Lock: any;
 
 @Injectable()
 export class Auth {
-  // Configure Auth0
-  lock = new Auth0Lock('pA75v0B8UDfNOk0h2tDnz5in4Je3AZHL', 'rapport.auth0.com', {});
-  constructor(private http: Http, 
-              private router:Router,  
-              private botService: BotService,
-              private gmailService: GmailService,
-              private fbService: FbService) {
+  private lock = new Auth0Lock('pA75v0B8UDfNOk0h2tDnz5in4Je3AZHL', 'rapport.auth0.com', {});
 
+  constructor(private http: Http, private router:Router, private botService: BotService, private gmailService: GmailService, private fbService: FbService) {
     this.lock.on("authenticated", (authResult) => {
       localStorage.setItem('id_token', authResult.idToken);
       this.router.navigate(['loading']);
@@ -33,43 +28,26 @@ export class Auth {
   }
   
   public login() {
-    // Call the show method to display the widget./
     this.lock.show();
   };
 
+  public logout() {
+    localStorage.removeItem('id_token');
+  };
+
   public onAuthentication(authResult) {
-    console.log("on Auth called");
-    let userObj;
-    let userBots;
-    //localStorage.setItem('id_token', authResult.idToken);
-    this.signInUser(authResult)
-      .then(userInfo => {
-        console.log("user info", userInfo);
-        localStorage.setItem('user_id',userInfo.id);
-        userObj = userInfo;
-        this.botService.getInitialData()
-          .then(arrayOfResolves => userBots = arrayOfResolves[3])
-          .then(() => this.gmailService.getContacts())
-          .then(() => {
-            if(userObj.fbCredentials){
-              return this.fbService.getContacts(userObj.id);
-            }  
-          })
-          .then(() => this.redirectForUserType(userObj, userBots))
-          //show spinner
-      });
+    api.service.signIn(authResult)
+    .then(this.setToken)
+    .then(this.userActions.getInitialData)
+    .then(this.fbActions.tryContacts)
+    .then(this.redirectForUserType);
   }
 
-  public signInUser(authResult) {
-     let body = JSON.stringify(authResult);
-     let headers = new Headers({'Content-Type': 'application/json'});
-           
-      //update user info from backend
-      return this.http.post('/signIn', body, {headers: headers})
-        .map(res => res.json()).toPromise();
+  private setToken(userInfo){
+    localStorage.setItem('user_id',userInfo.id);
   }
 
-  public redirectForUserType(userObj, userBots) {
+  public redirectForUserType(userObj) {
     if(userObj.newUser || this.botService.userBots.length===0){
       this.router.navigate(['setup']);
     } else {
@@ -81,8 +59,5 @@ export class Auth {
     return tokenNotExpired();
   };
 
-  public logout() {
-    // Remove token from localStorage
-    localStorage.removeItem('id_token');
-  };
+  
 }

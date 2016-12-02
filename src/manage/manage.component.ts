@@ -54,8 +54,8 @@ export class ManageComponent {
               private store: Store) {
 
    var self = this;
-   botService.state.subscribe(function(){
-     
+   botService.state.subscribe(function(state){
+     console.log(state);
    })
 
 
