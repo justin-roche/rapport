@@ -15,7 +15,7 @@ export class FbService {
     public contacts: Array<any>;
 
     constructor(private store: Store, private http: Http){
-
+        this.tryContacts = this.tryContacts.bind(this);
     }
 
     public tryContacts(){

@@ -1,7 +1,9 @@
 import { Injectable } from '@angular/core';
 import { Http, Headers } from '@angular/http';
 import { customBot, gmailContact } from '../shared/custom-type-classes';
-//import { BOTS } from '../data/mock-bots';
+import { tokenNotExpired } from 'angular2-jwt';
+import { Router } from '@angular/router';
+import { Store } from '../shared/store';
 
 @Injectable()
 export class BotService {
@@ -21,7 +23,7 @@ export class BotService {
   private headers = {headers: new Headers({'Content-Type': 'application/json'})};
 
   constructor(private http: Http) {
-
+    this.getInitialData = this.getInitialData.bind(this);
   }
 
  //<----------------------BOT STATE CHANGES---------------------->
@@ -34,6 +36,9 @@ export class BotService {
           this.decorateAll(this.userBots);
           this.scheduled = this.joinScheduledTaskDescriptions(this.userBots);
           this.recent = this.joinRecentTaskDescriptions(this.userBots);
+          
+          //this.store.dispatch('SET-USER-BOTS',{userBots: this.userBots});
+
           return this.userBots;
         } else {
           this.userBots = [];

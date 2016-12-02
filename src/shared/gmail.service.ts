@@ -7,7 +7,9 @@ export class GmailService {
 
     public contacts: Array<gmailContact>;
 
-    constructor(private http: Http) {}
+    constructor(private http: Http) {
+        this.getContacts = this.getContacts.bind(this);
+    }
 
     public getContacts() {
         let userId = localStorage.getItem('user_id');

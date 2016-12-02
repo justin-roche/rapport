@@ -13,6 +13,7 @@ import { gmailContact } from '../shared/custom-type-classes';
 import { GmailService } from '../shared/gmail.service';
 import { FbService } from '../shared/fb.service';
 import { Store } from '../shared/store';
+import { Reducers } from '../shared/reducers';
 
 declare var Auth0Lock: any;
 
@@ -20,7 +21,7 @@ declare var Auth0Lock: any;
 export class Auth {
   // Configure Auth0
   lock = new Auth0Lock('pA75v0B8UDfNOk0h2tDnz5in4Je3AZHL', 'rapport.auth0.com', {});
-  constructor(private store: Store, private http: Http, private router:Router, private botService: BotService, private gmailService: GmailService, private fbService: FbService) {
+  constructor(private reducers: Reducers, private store: Store, private http: Http, private router:Router, private botService: BotService, private gmailService: GmailService, private fbService: FbService) {
 
     this.lock.on("authenticated", (authResult) => {
       localStorage.setItem('id_token', authResult.idToken);
@@ -35,20 +36,18 @@ export class Auth {
   };
 
   public onAuthentication(authResult) {
-    let userObj;
-    let userBots;
-    //localStorage.setItem('id_token', authResult.idToken);
     this.signInUser(authResult)
       .then(userInfo => {
-        this.store.dispatch('SET',{appUserInfo: userInfo});
-        localStorage.setItem('user_id',userInfo.id);
-        userObj = userInfo;
-        this.botService.getInitialData()
-          .then(this.gmailService.getContacts.bind(this.gmailService))
-          .then(this.fbService.tryContacts.bind(this.fbService))
-          .then(() => this.redirectForUserType(userObj, userBots))
-          //show spinner
-      });
+        this.reducers.dispatch('SET',{appUserInfo: userInfo});
+      })
+      .then(this.botService.getInitialData)  
+      .then(this.gmailService.getContacts)
+      .then(this.fbService.tryContacts)
+      .then(this.reducers.dispatch.bind(this.reducers,'ROUTE',{}));
+  }
+
+  private setLocalStorage(){
+    localStorage.setItem('user_id',this.store.state.getValue().appUserInfo.id);
   }
 
   public signInUser(authResult) {
@@ -60,8 +59,11 @@ export class Auth {
         .map(res => res.json()).toPromise();
   }
 
-  public redirectForUserType(userObj, userBots) {
-    if(userObj.newUser || this.botService.userBots.length===0){
+  public redirectForUserType() {
+    var userObj = this.store.state.getValue().appUserInfo;
+    var userBots = this.store.state.getValue().bots.userBots;
+
+    if(userObj.newUser || userBots.length===0){
       this.router.navigate(['setup']);
     } else {
       this.router.navigate(['manage']);
