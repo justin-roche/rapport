@@ -89,7 +89,6 @@ export class SetupComponent {
         this.botService.addBotTypeToUser(selectedType);
         this.router.navigate(['manage']);
     } else {
-      this.store.addBot(selectedType);
       this.botService.addBotTypeToUser(selectedType);
       this.router.navigate(['manage']);
     }
