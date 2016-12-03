@@ -6,11 +6,20 @@ import { GmailService } from '../shared/gmail.service';
 export class Store {
 
   private initialState = {
-    appUserInfo: null,
+    user: {
+      authResult: null,
+      appUserInfo: null,
+      token: null,
+    },
     bots: {
+      botTypes: null,
       selectedBot: null,
       userBots: [],
-    } 
+    },
+    tasks: {
+      holidays: null,
+      allTasks: null,
+    }
   }
 
   public state = new BehaviorSubject(this.initialState);

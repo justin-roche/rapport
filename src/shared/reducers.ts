@@ -4,25 +4,55 @@ import { GmailService } from '../shared/gmail.service';
 import { BotService } from '../shared/bot.service';
 import { Store } from '../shared/store';
 import { Router } from '@angular/router';
+import {ApiService} from '../shared/api.service';
+import 'rxjs/add/operator/take';
+import 'rxjs/add/operator/toPromise';
+import 'rxjs/add/operator/map';
+import 'rxjs/add/operator/catch';
 
 @Injectable()
 export class Reducers {
 
 
-constructor(private router: Router, private botService: BotService, private store: Store){
+constructor(private apiService: ApiService, private router: Router, private botService: BotService, private store: Store){
   this.dispatch = this.dispatch.bind(this);
 }
 
 public dispatch(type,payload){
-    var state = this.store.state.getValue();
+
+    //use getValue to unwrap the currentState
+    var state = Object.assign({},this.store.state.getValue());
+    
     switch(type){
-      case 'SET':
-        for(var prop in payload){
-          state[prop] = payload[prop];
-        }
+      
+      case 'SET-AUTH-RESULT':
+        state.user.authResult = payload;
+        break;
+
+      case 'SET-USER-INFO':
+        state.user.appUserInfo = payload;
+        break;
+
+      case 'SET-USER-VARS':
+        state.user.token = localStorage.getItem('id_token');
+        state.user.token = localStorage.getItem('user_id');
+        break;
+    
+      case 'GET-USER-BOTS': 
+        
+          //this.decorateAll(this.userBots);
+          //this.scheduled = this.joinScheduledTaskDescriptions(this.userBots);
+          //this.recent = this.joinRecentTaskDescriptions(this.userBots);
+          //this.store.dispatch('SET-USER-BOTS',{userBots: this.userBots});
+          // } else {
+          //   state.bots.userBots = [];
+          //   //state.tasks.scheduled = [];
+          // }
+
         break;
       case 'SET-USER-BOTS':
         state.bots.userBots = payload.userBots;
+        break;
       case 'DELETE-TASK': 
         payload.bot.tasks = payload.bot.tasks.filter(function(task){
           return task !== payload.task;
@@ -41,8 +71,10 @@ public dispatch(type,payload){
           return task.id !== payload.task.id;
         })
         break;
+
+
       case 'ROUTE':
-        var userObj = this.store.state.getValue().appUserInfo;
+        var userObj = this.store.state.getValue().user.appUserInfo;
         var userBots = this.store.state.getValue().bots.userBots;
         if(userObj.newUser || userBots.length===0){
           this.router.navigate(['setup']);
@@ -54,7 +86,7 @@ public dispatch(type,payload){
         alert('unhandled action');
     }
     this.store.state.next(state);
-
+    return this.store.state.asObservable().toPromise();
   }
 
 }

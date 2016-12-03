@@ -19,9 +19,9 @@ export class FbService {
     }
 
     public tryContacts(){
-        var fbCredentials = this.store.state.getValue().appUserInfo.fbCredentials;
+        var fbCredentials = this.store.state.getValue().user.appUserInfo.fbCredentials;
         if(fbCredentials){
-            return this.getContacts(this.store.state.getValue().appUserInfo.id);
+            return this.getContacts(this.store.state.getValue().user.appUserInfo.id);
         }  
     }
 

@@ -23,6 +23,12 @@ export class Auth {
   lock = new Auth0Lock('pA75v0B8UDfNOk0h2tDnz5in4Je3AZHL', 'rapport.auth0.com', {});
   constructor(private reducers: Reducers, private store: Store, private http: Http, private router:Router, private botService: BotService, private gmailService: GmailService, private fbService: FbService) {
 
+    //bind local variables to the results of observable changes
+    // this.state.subscribe(state){
+    //   this.blahblah = state.blahblah
+    //  this.state = state./.getValue()
+    // }
+
     this.lock.on("authenticated", (authResult) => {
       localStorage.setItem('id_token', authResult.idToken);
       this.router.navigate(['loading']);
@@ -36,21 +42,33 @@ export class Auth {
   };
 
   public onAuthentication(authResult) {
-    this.signInUser(authResult)
-      .then(userInfo => {
-        this.reducers.dispatch('SET',{appUserInfo: userInfo});
-      })
-      .then(this.botService.getInitialData)  
-      .then(this.gmailService.getContacts)
-      .then(this.fbService.tryContacts)
-      .then(this.reducers.dispatch.bind(this.reducers,'ROUTE',{}));
+
+    //call api servers which call dispatch on their results
+
+    //execute all of these in series
+    
+    // this.reducers.dispatch('SET-AUTH-RESULT',authResult);
+    // this.apiService.signIn()
+    // this.apiService.getHolidays(), 
+    // this.apiService.getAllTasks(), 
+    // this.apiService.getBotTypes(), 
+    // this.apiService.getBots()])
+  
+    //this.signInUser(authResult)
+    //   .then(userInfo => {
+    //     this.reducers.dispatch('SET-APP-USER-INFO',userInfo);
+    //   })
+    //   .then(this.botService.getInitialData)  
+    //   .then(this.gmailService.getContacts)
+    //   .then(this.fbService.tryContacts)
+    //   .then(this.reducers.dispatch.bind(this.reducers,'ROUTE',{}));
   }
 
   private setLocalStorage(){
-    localStorage.setItem('user_id',this.store.state.getValue().appUserInfo.id);
+    localStorage.setItem('user_id',this.store.state.getValue().user.appUserInfo.id);
   }
 
-  public signInUser(authResult) {
+   public signInUser(authResult) {
      let body = JSON.stringify(authResult);
      let headers = new Headers({'Content-Type': 'application/json'});
            
@@ -59,8 +77,11 @@ export class Auth {
         .map(res => res.json()).toPromise();
   }
 
+
+  
+
   public redirectForUserType() {
-    var userObj = this.store.state.getValue().appUserInfo;
+    var userObj = this.store.state.getValue().user.appUserInfo;
     var userBots = this.store.state.getValue().bots.userBots;
 
     if(userObj.newUser || userBots.length===0){
