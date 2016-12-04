@@ -49,7 +49,8 @@ public dispatch(type,payload){
         state.bots.botTypes = payload.bots; 
         this.decorators.decorateBots(state.bots.botTypes);
         break;
-
+      case 'SET_SELECTED_TYPE':
+        state.setupView.selectedType = payload;
       case 'SET-BOTS': 
         state.bots.userBots = payload; 
         this.decorators.decorateBots(state.bots.userBots);
