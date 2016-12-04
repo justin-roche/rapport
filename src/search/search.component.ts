@@ -2,7 +2,6 @@ import { Component,OnInit, Input, OnChanges} from '@angular/core';
 import { gmailContact } from '../shared/custom-type-classes';
 import { FilterContacts } from './contact.pipe';
 import { BotService } from '../shared/bot.service';
-import { GmailService} from '../shared/gmail.service';
 import { FbService} from '../shared/fb.service';
 import { Store } from '../shared/store';
 
@@ -23,7 +22,6 @@ export class SearchComponent implements OnChanges {
   private contacts: any;
 
   constructor(private botService: BotService,
-              private gmailService: GmailService,
               private fbService: FbService,
               private store: Store) 
   {
@@ -62,10 +60,10 @@ export class SearchComponent implements OnChanges {
         return addedFriends.indexOf(contact.vanity) === -1;
       });
     } else {
-      this.contacts = this.gmailService.contacts.filter(contact => {
-        const selectedContactNames = this.bot.selectedContacts.map(contact => contact.name);
-        return contact.name && contact.email && selectedContactNames.indexOf(contact.name) === -1;
-      });
+      // this.contacts = this.gmailService.contacts.filter(contact => {
+      //   const selectedContactNames = this.bot.selectedContacts.map(contact => contact.name);
+      //   return contact.name && contact.email && selectedContactNames.indexOf(contact.name) === -1;
+      // });
     }
   }
 

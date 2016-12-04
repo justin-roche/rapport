@@ -4,7 +4,6 @@ import { customBot, gmailContact } from '../shared/custom-type-classes';
 import { BotService } from '../shared/bot.service';
 import { OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import {GmailService} from '../shared/gmail.service';
 import {FbService} from '../shared/fb.service';
 
 import { ContactComponent } from '../contact/contact.component';
@@ -49,7 +48,6 @@ export class ManageComponent {
                     };
   //
   constructor(private botService: BotService,
-              private gmailService: GmailService,
               private router: Router,
               private store: Store) {
 

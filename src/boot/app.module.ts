@@ -11,7 +11,6 @@ import { AuthGuard } from '../shared/auth.guard';
 import { Auth0CallbackGuard } from '../shared/auth0.guard';
 import { BotService }         from '../shared/bot.service';
 import { Auth } from '../shared/auth.service';
-import { GmailService } from '../shared/gmail.service';
 import { FbService } from '../shared/fb.service';
 
 import { Ng2Bs3ModalModule } from 'ng2-bs3-modal/ng2-bs3-modal';
@@ -59,7 +58,6 @@ import { ApiService } from '../shared/api.service';
     Auth,
     Store,
     Reducers,
-    GmailService,
     ApiService,
     FbService,
     LogInGuard,

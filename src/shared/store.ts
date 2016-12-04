@@ -1,6 +1,5 @@
 import {BehaviorSubject} from 'rxjs/BehaviorSubject';
 import { Injectable }      from '@angular/core';
-import { GmailService } from '../shared/gmail.service';
 
 @Injectable()
 export class Store {
@@ -10,6 +9,8 @@ export class Store {
       authResult: null,
       appUserInfo: null,
       token: null,
+      gmailContacts: null,
+      fbContacts: null,
     },
     bots: {
       botTypes: null,
@@ -19,6 +20,9 @@ export class Store {
     tasks: {
       holidays: null,
       allTasks: null,
+    },
+    setupView: {
+      selectedType: null,
     }
   }
 

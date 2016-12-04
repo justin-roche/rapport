@@ -4,13 +4,14 @@ import { customBot, gmailContact } from '../shared/custom-type-classes';
 import { tokenNotExpired } from 'angular2-jwt';
 import { Router } from '@angular/router';
 import { Store } from '../shared/store';
+import { Reducers } from '../shared/reducers';
 
 @Injectable()
 export class ApiService {
 
   private headers = new Headers({'Content-Type': 'application/json'});
 
-  constructor(private http: Http, private store: Store){
+  constructor(private reducers: Reducers, private http: Http, private store: Store){
     //this.signIn = this.signIn.bind(this);
   }
   
@@ -19,24 +20,24 @@ export class ApiService {
     return this.http.post('/signIn', body, {headers: this.headers})
       .toPromise()
       .then((res)=>{
-        return res.json()
+        this.reducers.dispatch('SET-USER-INFO',res.json());
       });
   }
 
   public getHolidays(){
     return this.http.get(`/api/holidays?year=${2016}`)
-      .map((data: any) => {
-        return data.json();
-      })
-      .toPromise();
+      .toPromise()
+      .then((res) => {
+        this.reducers.dispatch('SET-HOLIDAYS',res.json());
+      });
   }
   //this.holidays = data;
 
   public getAllTasks(){
       return this.http.get('/api/tasks')
       .toPromise()
-      .then((data)=>{
-        return data.json();
+      .then((res)=>{
+        this.reducers.dispatch('SET-ALL-TASKS',res.json());
       });
   }
   // this.allTasks = data;
@@ -44,20 +45,29 @@ export class ApiService {
 
   public getBotTypes(){
     return this.http.get(`/api/botTypes`)
-      .map((data: any)=>{          
-          return data.json();
-      })
-      .toPromise();
+      .toPromise()
+      .then((res)=>{          
+          this.reducers.dispatch('SET-BOT-TYPES',res.json());
+      });
   }
   //this.decorateAll(this.botTypes);
 
   public getBots(){
     var id = this.store.state.getValue().user.appUserInfo.id; 
     return this.http.get(`/api/bots?userId=${id}`)
-      .map(function(data: any) {
-        return JSON.parse(data._body);
-      })
       .toPromise()
+      .then((res)=> {
+        this.reducers.dispatch('SET-BOTS',res.json());
+      });
+  }
+
+  public getGmailContacts(){
+    var id = this.store.state.getValue().user.appUserInfo.id; 
+    return this.http.get(`/api/gmail/contacts?userId=${id}`)
+    .toPromise()
+    .then((res) => {
+      this.reducers.dispatch('SET-GMAIL-CONTACTS',res.json());
+    });
   }
 
 }
