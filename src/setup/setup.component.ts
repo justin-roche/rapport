@@ -2,7 +2,9 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { ModalComponent } from 'ng2-bs3-modal/ng2-bs3-modal';
 
 import { Store } from '../shared/store';
-import {FbService} from '../shared/fb.service';
+import { FbService } from '../shared/fb.service';
+import { Reducers } from '../shared/reducers';
+import { Router } from '@angular/router';
 
 @Component({
   moduleId: module.id,
@@ -20,10 +22,8 @@ export class SetupComponent {
     loading: false,
   }
   bots = [];
+  fbLoggedIn = false;
   selectedType;
-
-  // @ViewChild('myModal')
-  // modal: ModalComponent;
 
   // close() {
   //     this.fbUsername = "";
@@ -31,66 +31,52 @@ export class SetupComponent {
   //     this.modal.close();
   // }
 
-  // open() {
-  //     this.modal.open();
-  // }
-
-  // @ViewChild('powerModal')
-  // powerModal: ModalComponent;
-
-  // closePower() {
-  //     this.powerModal.close();
-  // }
-
-  // openPower() {
-  //     this.powerModal.open();
-  // }
-
-  constructor(private fbService: FbService, private store: Store){
-    this.bots = store.state.getValue().bots.botTypes;
-    console.log('bots assigned')
+  constructor(private router: Router, private reducers: Reducers, private fbService: FbService, private store: Store){
     store.state.subscribe((nextState)=>{
-      console.log('bots received');
       this.bots = nextState.bots.botTypes; 
+      this.fbLoggedIn = nextState.user.fbContacts;
     });
   }
 
-  // private handleClick(selectedType){
-  //   this.selectedType = selectedType;
+  private selectBot(selectedType){
+    if(selectedType.botType === 'social' && !this.fbLoggedIn){
+      this.modal.open();
+    } else if(selectedType.botType === 'power'){
+     this.powerModal.open();
+    } else {
+      this.createNewBot(selectedType);
+    }
+  }
 
-  //   //if the fbService has no contacts, get the users fb auth info
-  //   if(selectedType.botType === 'social' && !this.store.state.getValue().user.fbContacts){
-  //     this.open();
-  //   } else if(selectedType.botType === 'power'){
-  //     this.openPower();
-  //   } else {
-  //     this.routeToManage(selectedType);
-  //   }
+  private fbLogin(){
+    this.uiVars.loading = true;
+    this.fbService.login(this.fbUsername, this.fbPassword)
+    .then(this.createNewBot.bind(this,this.bots[1]))
+    .catch(()=>{
+      this.fbPassword = "";
+      this.fbUsername = "";
+      this.uiVars.loading = false;
+      this.uiVars.invalid = true;
+    })
+  }
+
+  private createNewBot(bot){
+    this.reducers.dispatch('ADD-NEW-BOT', bot);
+    this.router.navigate(['manage']);
+  }
+
+  // closePower() {
+  //     powerModal.close();
   // }
 
-  // private fbLogin(){
-  //   var self = this;
-  //   this.uiVars.loading = true;
-  //   this.apiService.getFbContacts(this.fbUsername, this.fbPassword).then(()=>{
-  //       this.routeToManage(this.selectedType);
-  //   })
-  //   .catch(()=>{
-  //     this.fbPassword = "";
-  //     this.fbUsername = "";
-  //     this.uiVars.loading = false;
-  //     this.uiVars.invalid = true;
-  //   })
-  // }
+  @ViewChild('myModal')
+  modal: ModalComponent;
 
-  // private routeToManage(selectedType){
-  //   if(selectedType.botType === 'power'){
-  //     this.router.navigate(['loading']);
-  //       this.botService.addBotTypeToUser(selectedType);
-  //       this.router.navigate(['manage']);
-  //   } else {
-  //     this.botService.addBotTypeToUser(selectedType);
-  //     this.router.navigate(['manage']);
-  //   }
-  // }
+  @ViewChild('powerModal')
+  powerModal: ModalComponent;
+
+  
+
+  
 
 }

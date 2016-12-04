@@ -2,7 +2,6 @@ import {BehaviorSubject} from 'rxjs/BehaviorSubject';
 import { Injectable }      from '@angular/core';
 import { BotService } from '../shared/bot.service';
 import { Store } from '../shared/store';
-import { Router } from '@angular/router';
 import 'rxjs/add/operator/take';
 import 'rxjs/add/operator/toPromise';
 import 'rxjs/add/operator/map';
@@ -12,7 +11,7 @@ import 'rxjs/add/operator/catch';
 export class Reducers {
 
 
-constructor(private router: Router, private botService: BotService, private store: Store){
+constructor(private botService: BotService, private store: Store){
   this.dispatch = this.dispatch.bind(this);
 }
 
@@ -67,17 +66,16 @@ public dispatch(type,payload){
       case 'SET-FB-CONTACTS': 
         state.user.fbContacts = payload; 
         break;
-      case 'ROUTE':
-        var userObj = this.store.state.getValue().user.appUserInfo;
-        var userBots = this.store.state.getValue().bots.userBots;
-        if(userObj.newUser || userBots.length===0){
-          this.router.navigate(['setup']);
-        } else {
-          this.router.navigate(['manage']);
-        }
+
+      case 'SET-FB-CREDENTIALS': 
+        state.user.appUserInfo.fbCredentials = true; 
         break;
-      case 'SET-USER-BOTS':
-        state.bots.userBots = payload.userBots;
+      case 'ROUTE':
+        
+        break;
+      case 'ADD-NEW-BOT': 
+        state.bots.userBots.push(payload);
+        
         break;
       case 'DELETE-TASK': 
         payload.bot.tasks = payload.bot.tasks.filter(function(task){

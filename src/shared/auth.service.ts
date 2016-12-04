@@ -19,15 +19,13 @@ declare var Auth0Lock: any;
 
 @Injectable()
 export class Auth {
-  // Configure Auth0
+
+  private fbAuthenticated;
+
   lock = new Auth0Lock('pA75v0B8UDfNOk0h2tDnz5in4Je3AZHL', 'rapport.auth0.com', {});
   constructor(private apiService: ApiService, private reducers: Reducers, private store: Store, private http: Http, private router:Router, private botService: BotService, private fbService: FbService) {
 
-    //bind local variables to the results of observable changes
-    // this.state.subscribe(state){
-    //   this.blahblah = state.blahblah
-    //  this.state = state./.getValue()
-    // }
+    
 
     this.lock.on("authenticated", (authResult) => {
       localStorage.setItem('id_token', authResult.idToken);
@@ -54,7 +52,23 @@ export class Auth {
     .then(this.apiService.getBotTypes.bind(this.apiService))
     .then(this.apiService.getBots.bind(this.apiService))
     .then(this.apiService.getGmailContacts.bind(this.apiService))
-    .then(this.reducers.dispatch.bind(this.reducers,'ROUTE',{}));
+    .then(this.fbService.tryContacts.bind(this))
+    .then(this.route.bind(this));
+  }
+
+  private tryFbContacts(){
+    
+  }
+
+  private route() {
+    var userObj = this.store.state.getValue().user.appUserInfo;
+    var userBots = this.store.state.getValue().bots.userBots;
+
+    if(userObj.newUser || userBots.length===0){
+      this.router.navigate(['setup']);
+    } else {
+      this.router.navigate(['manage']);
+    }
   }
 
   // private setLocalStorage(){
@@ -73,16 +87,7 @@ export class Auth {
 
   
 
-  // public redirectForUserType() {
-  //   var userObj = this.store.state.getValue().user.appUserInfo;
-  //   var userBots = this.store.state.getValue().bots.userBots;
-
-  //   if(userObj.newUser || userBots.length===0){
-  //     this.router.navigate(['setup']);
-  //   } else {
-  //     this.router.navigate(['manage']);
-  //   }
-  // }
+ 
 
   public authenticated() {
     return tokenNotExpired();

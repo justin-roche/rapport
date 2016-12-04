@@ -3,6 +3,7 @@ import { tokenNotExpired } from 'angular2-jwt';
 import { Headers, Http, RequestOptions } from '@angular/http';
 import { Router } from '@angular/router';
 import { Store } from '../shared/store';
+import { ApiService } from '../shared/api.service';
 
 import 'rxjs/add/operator/take';
 import 'rxjs/add/operator/toPromise';
@@ -13,49 +14,42 @@ import 'rxjs/add/operator/catch';
 export class FbService {
 
     public contacts: Array<any>;
+    private fbAuthenticated;
 
-    constructor(private store: Store, private http: Http){
+    constructor(private apiService: ApiService, private store: Store, private http: Http){
+
         this.tryContacts = this.tryContacts.bind(this);
+
+        store.state.subscribe((nextState)=>{
+            var appUserInfo = nextState.user.appUserInfo;
+            this.fbAuthenticated = appUserInfo ? appUserInfo.fbCredentials: null;
+        });
     }
 
     public tryContacts(){
-        var fbCredentials = this.store.state.getValue().user.appUserInfo.fbCredentials;
-        if(fbCredentials){
-            return this.getContacts(this.store.state.getValue().user.appUserInfo.id);
+        if(this.fbAuthenticated){
+            return this.apiService.getFbContacts();
         }  
     }
 
+    
+
     public login(fbUsername: String, fbPassword: String){
-        return this.saveCredentials(fbUsername, fbPassword)
-        .then(()=>{
-            var userId = localStorage.getItem('user_id');
-            return this.getContacts(userId);
-        });
+        return this.apiService.updateFbCredentials(fbUsername, fbPassword)
+        .then(this.apiService.getFbContacts.bind(this.apiService));
     }
 
-    public saveCredentials(fbUsername: String, fbPassword: String){
-        let headers = new Headers({'Content-Type': 'application/json'});
-        var body = {
-            fbEmail: fbUsername,
-            fbPassword: fbPassword,
-        };
+    // public saveCredentials(fbUsername: String, fbPassword: String){
+    //     let headers = new Headers({'Content-Type': 'application/json'});
+    //     var body = {
+    //         fbEmail: fbUsername,
+    //         fbPassword: fbPassword,
+    //     };
 
-        return this.http.post('/updateFacebookCredentials', body, {headers: headers})
-        .toPromise()
-        .then((data)=>{
-            console.log('save credentials resolved');
-            //this.contacts = data.json(); 
-        });
-    }
+    //     
+    // }
 
-    public getContacts(userId){
-        return this.http.get(`/api/facebook/friends?userId=${userId}`)
-            .toPromise()
-            .then(data => {
-                console.log('get contacts resolved');
-                this.contacts = data.json();
-            });
-    }
+   
 
 };
 

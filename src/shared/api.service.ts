@@ -70,4 +70,25 @@ export class ApiService {
     });
   }
 
+   public getFbContacts(){
+    var id = this.store.state.getValue().user.appUserInfo.id; 
+    return this.http.get(`/api/facebook/friends?userId=${id}`)
+      .toPromise()
+      .then(res => {
+        this.reducers.dispatch('SET-FB-CONTACTS',res.json());
+      });
+    }
+
+    public updateFbCredentials(username, password){
+      var body = {
+            fbEmail: username,
+            fbPassword: password,
+        };
+      return this.http.post('/updateFacebookCredentials', body, {headers: this.headers})
+        .toPromise()
+        .then((res)=>{
+            this.reducers.dispatch('SET-FB-CREDENTIALS',{});
+        });
+    }
+
 }
