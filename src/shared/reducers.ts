@@ -1,17 +1,18 @@
 import {BehaviorSubject} from 'rxjs/BehaviorSubject';
 import { Injectable }      from '@angular/core';
-import { BotService } from '../shared/bot.service';
 import { Store } from '../shared/store';
 import 'rxjs/add/operator/take';
 import 'rxjs/add/operator/toPromise';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/catch';
 
+import { DecoratorService } from '../shared/decorator.service';
+
 @Injectable()
 export class Reducers {
 
 
-constructor(private botService: BotService, private store: Store){
+constructor(private decorators: DecoratorService, private store: Store){
   this.dispatch = this.dispatch.bind(this);
 }
 
@@ -41,28 +42,25 @@ public dispatch(type,payload){
         break;
       case 'SET-ALL-TASKS':
         state.tasks.allTasks = payload; 
-        //decorate
+        this.decorators.decorateTasks(state.tasks.allTasks);
         break;
 
       case 'SET-BOT-TYPES': 
         state.bots.botTypes = payload.bots; 
-        //decorate
+        this.decorators.decorateBots(state.bots.botTypes);
         break;
+
       case 'SET-BOTS': 
         state.bots.userBots = payload; 
-        //decorate
+        this.decorators.decorateBots(state.bots.userBots);
+        state.log.recent = this.decorators.aggregateRecent(state.bots.userBots)
+        state.log.scheduled = this.decorators.aggregateScheduled(state.bots.userBots)
         break;
-          //this.decorateAll(this.userBots);
-          //this.scheduled = this.joinScheduledTaskDescriptions(this.userBots);
-          //this.recent = this.joinRecentTaskDescriptions(this.userBots);
-          //this.store.dispatch('SET-USER-BOTS',{userBots: this.userBots});
-          // } else {
-          //   state.bots.userBots = [];
-          //   //state.tasks.scheduled = [];
-          // }
+
       case 'SET-GMAIL-CONTACTS': 
         state.user.gmailContacts = payload; 
         break;
+
       case 'SET-FB-CONTACTS': 
         state.user.fbContacts = payload; 
         break;
@@ -70,31 +68,30 @@ public dispatch(type,payload){
       case 'SET-FB-CREDENTIALS': 
         state.user.appUserInfo.fbCredentials = true; 
         break;
-      case 'ROUTE':
-        
-        break;
+
       case 'ADD-NEW-BOT': 
         state.bots.userBots.push(payload);
-        
         break;
+
       case 'DELETE-TASK': 
-        payload.bot.tasks = payload.bot.tasks.filter(function(task){
-          return task !== payload.task;
-        });
-        this.botService.deletedTasks.push(payload.task.id);
-        if(!payload.task.decorated.subTask){
-          payload.bot.decorated.potentialTasks.push(payload.task); 
-        }
+        // payload.bot.tasks = payload.bot.tasks.filter(function(task){
+        //   return task !== payload.task;
+        // });
+        //this.botService.deletedTasks.push(payload.task.id);
+        // if(!payload.task.decorated.subTask){
+        //   payload.bot.decorated.potentialTasks.push(payload.task); 
+        // }
         break;
+
       case 'ADD-TASK': 
-        payload.bot.tasks.push(payload.task);
-        payload.bot.decorated.potentialTasks = payload.bot.decorated.potentialTasks.filter(function(task){
-          return task !== payload.task;
-        });
-        this.botService.deletedTasks = this.botService.deletedTasks.map(function(task){
-          return task.id !== payload.task.id;
-        })
-        break;
+        // payload.bot.tasks.push(payload.task);
+        // payload.bot.decorated.potentialTasks = payload.bot.decorated.potentialTasks.filter(function(task){
+        //   return task !== payload.task;
+        // });
+        // this.botService.deletedTasks = this.botService.deletedTasks.map(function(task){
+        //   return task.id !== payload.task.id;
+        // })
+        // break;
 
 
       

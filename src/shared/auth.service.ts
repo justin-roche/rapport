@@ -56,10 +56,6 @@ export class Auth {
     .then(this.route.bind(this));
   }
 
-  private tryFbContacts(){
-    
-  }
-
   private route() {
     var userObj = this.store.state.getValue().user.appUserInfo;
     var userBots = this.store.state.getValue().bots.userBots;

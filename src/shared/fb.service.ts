@@ -32,24 +32,10 @@ export class FbService {
         }  
     }
 
-    
-
     public login(fbUsername: String, fbPassword: String){
         return this.apiService.updateFbCredentials(fbUsername, fbPassword)
         .then(this.apiService.getFbContacts.bind(this.apiService));
     }
-
-    // public saveCredentials(fbUsername: String, fbPassword: String){
-    //     let headers = new Headers({'Content-Type': 'application/json'});
-    //     var body = {
-    //         fbEmail: fbUsername,
-    //         fbPassword: fbPassword,
-    //     };
-
-    //     
-    // }
-
-   
 
 };
 

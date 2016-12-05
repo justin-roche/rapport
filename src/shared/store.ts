@@ -17,6 +17,10 @@ export class Store {
       selectedBot: null,
       userBots: [],
     },
+    log: {
+      recent: null,
+      scheduled: null,
+    },
     tasks: {
       holidays: null,
       allTasks: null,

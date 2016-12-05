@@ -208,8 +208,8 @@ export class BotService {
     var self = this;
     bots.forEach(function(bot){
       bot.decorated = JSON.parse(JSON.stringify(self.botExtensions[bot.botType]));
-      self.addPotentialTasks(bot);
       self.extendTasks(bot.tasks);
+      self.addPotentialTasks(bot);
     });
   }
 

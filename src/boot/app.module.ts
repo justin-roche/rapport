@@ -30,6 +30,8 @@ import { ActivitiesContainer } from '../view-activities/view-activities.componen
 import { Store } from '../shared/store';
 import { Reducers } from '../shared/reducers';
 import { ApiService } from '../shared/api.service';
+import { DecoratorService } from '../shared/decorator.service';
+
 @NgModule({
   imports: [
     BrowserModule,
@@ -60,6 +62,7 @@ import { ApiService } from '../shared/api.service';
     Reducers,
     ApiService,
     FbService,
+    DecoratorService,
     LogInGuard,
     AuthGuard,
     Auth0CallbackGuard,
