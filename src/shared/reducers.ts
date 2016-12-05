@@ -1,6 +1,7 @@
 import {BehaviorSubject} from 'rxjs/BehaviorSubject';
 import { Injectable }      from '@angular/core';
 import { Store } from '../shared/store';
+import { Router } from '@angular/router';
 import 'rxjs/add/operator/take';
 import 'rxjs/add/operator/toPromise';
 import 'rxjs/add/operator/map';
@@ -49,7 +50,7 @@ public dispatch(type,payload){
         state.bots.botTypes = payload.bots; 
         this.decorators.decorateBots(state.bots.botTypes);
         break;
-      case 'SET_SELECTED_TYPE':
+      case 'SET-SELECTED-TYPE':
         state.setupView.selectedType = payload;
       case 'SET-BOTS': 
         state.bots.userBots = payload; 
@@ -72,6 +73,17 @@ public dispatch(type,payload){
 
       case 'ADD-NEW-BOT': 
         state.bots.userBots.push(payload);
+      case 'ROUTE':
+        var userObj = this.store.state.getValue().user.appUserInfo;
+        var userBots = this.store.state.getValue().bots.userBots;
+        if(userObj.newUser || userBots.length===0){
+          this.router.navigate(['setup']);
+        } else {
+          this.router.navigate(['manage']);
+        }
+        break;
+      case 'SET-USER-BOTS':
+        state.bots.userBots = payload.userBots;
         break;
 
       case 'DELETE-TASK': 

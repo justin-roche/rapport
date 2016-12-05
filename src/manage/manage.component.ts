@@ -30,31 +30,35 @@ export class ManageComponent {
   private selectedBot: customBot;
   private selectedTask;
   private subTask;
+
   private displayMessage;
   private customMessage;
   private customInterval;
   private customDate;
+  
   private activities: Array<string>;
   private contacts: Array<gmailContact>;
   private tasks: Array<string>;
   private mode = "bot";
+
   private scheduled;
   private editabelName;
   private customBotName;
-  private recent; 
+  private recent;
+
   private uiVars = {newContact:{name: "", string: ""},
                     editContact: "",
                     success: false,
                     };
   //
-  constructor(private botService: BotService,
-              private router: Router,
-              private store: Store) {
+  constructor(private botService: BotService,private router: Router,private store: Store) {
 
-   var self = this;
-   store.state.subscribe(function(){
-     self.reload();
-   })
+    store.state.subscribe(nextState => {
+      this.bots = nextState.bots.userBots;
+      this.selectedBot = nextState.bots.selectedBot;
+      this.tasks = nextState.tasks.allTasks;
+
+    });
 
 
   }
