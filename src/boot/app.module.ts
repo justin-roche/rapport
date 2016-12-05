@@ -21,8 +21,8 @@ import { SetupComponent }    from '../setup/setup.component';
 import { ManageComponent }    from '../manage/manage.component';
 import { ContactComponent }    from '../contact/contact.component';
 import { HomePageComponent } from '../home-page/home.component';
-import { SearchComponent } from '../search/search.component';
-import { FilterContacts } from '../search/contact.pipe';
+import { AvailableContactsComponent } from '../available/available.component';
+import { FilterContacts } from '../available/contact.pipe';
 import { LoadingComponent } from '../loading/loading.component';
 import { ActivitiesTable } from '../activities-table/activities-table.component';
 import { ActivitiesContainer } from '../view-activities/view-activities.component';
@@ -49,7 +49,7 @@ import { DecoratorService } from '../shared/decorator.service';
     SetupComponent,
     ManageComponent,
     ContactComponent,
-    SearchComponent,
+    AvailableContactsComponent,
     FilterContacts,
     LoadingComponent
   ],

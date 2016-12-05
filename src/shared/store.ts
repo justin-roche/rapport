@@ -27,6 +27,9 @@ export class Store {
     },
     setupView: {
       selectedType: null,
+    },
+    manageView: {
+      availableContacts: null,
     }
   }
 

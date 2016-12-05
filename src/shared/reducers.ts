@@ -41,23 +41,30 @@ public dispatch(type,payload){
         state.tasks.holidays = payload; 
         //decorate
         break;
+
       case 'SET-ALL-TASKS':
         state.tasks.allTasks = payload; 
         this.decorators.decorateTasks(state.tasks.allTasks);
         break;
+
       case 'ADD-NEW-BOT': 
         state.bots.userBots.push(payload);
         break;
+
       case 'SET-BOT-TYPES': 
         state.bots.botTypes = payload.bots; 
         this.decorators.decorateBots(state.bots.botTypes);
         break;
+
       case 'SET-SELECTED-TYPE':
         state.setupView.selectedType = payload;
         break;
+
       case 'SET-SELECTED-BOT':
         state.bots.selectedBot = payload;
+        state.manageView.availableContacts = this.decorators.chooseAvailableContacts(state.bots.selectedBot);
         break;
+
       case 'SET-BOTS': 
         state.bots.userBots = payload; 
         this.decorators.decorateBots(state.bots.userBots);
@@ -66,7 +73,7 @@ public dispatch(type,payload){
         break;
 
       case 'SET-GMAIL-CONTACTS': 
-        state.user.gmailContacts = payload; 
+        state.user.gmailContacts = this.decorators.filterGmailContacts(payload); 
         break;
 
       case 'SET-FB-CONTACTS': 
@@ -79,17 +86,14 @@ public dispatch(type,payload){
 
       case 'ADD-NEW-BOT': 
         state.bots.userBots.push(payload);
-      case 'ROUTE':
-        var userObj = this.store.state.getValue().user.appUserInfo;
-        var userBots = this.store.state.getValue().bots.userBots;
-        if(userObj.newUser || userBots.length===0){
-          this.router.navigate(['setup']);
-        } else {
-          this.router.navigate(['manage']);
-        }
-        break;
+      
       case 'SET-USER-BOTS':
         state.bots.userBots = payload.userBots;
+        break;
+
+      case 'ADD-SELECTED-CONTACT':
+        this.decorators.addToSelectedContacts(state.bots.selectedBot, payload);
+        state.manageView.availableContacts = this.decorators.removeFromAvailableContacts(payload);
         break;
 
       case 'DELETE-TASK': 

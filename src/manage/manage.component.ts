@@ -7,7 +7,7 @@ import { Router } from '@angular/router';
 import {FbService} from '../shared/fb.service';
 
 import { ContactComponent } from '../contact/contact.component';
-import { SearchComponent } from '../search/search.component';
+import { AvailableContactsComponent } from '../available/available.component';
 import { ModalComponent } from 'ng2-bs3-modal/ng2-bs3-modal';
 import { Store } from '../shared/store';
 import { Reducers } from '../shared/reducers';

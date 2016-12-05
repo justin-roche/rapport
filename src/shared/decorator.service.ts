@@ -123,6 +123,35 @@ export class DecoratorService {
     })[0].name
   }
 
+  //<----------------------CHOOSING AVAILABLECONTACT TYPE
+
+  public filterGmailContacts(contacts){
+    return contacts.filter(contact=>{
+      return contact.name != "";
+    })
+  }
+  
+  public chooseAvailableContacts(bot){
+    if(bot.decorated.platform === 'gmail'){
+      return this.store.state.getValue().user.gmailContacts;
+    } else {
+      return this.store.state.getValue().user.fbContacts;
+    }
+  }
+
+  public addToSelectedContacts(bot, contact){
+    if(bot.decorated.platform === 'gmail'){
+      bot.selectedContacts.push(contact);
+    } else {
+      bot.selectedFbFriends.push(contact);
+    }
+  }
+
+  public removeFromAvailableContacts(removed){
+    return this.store.state.getValue().manageView.availableContacts.filter(contact=>{
+      return contact !== removed; 
+    });
+  }
   //<----------------------AGGREGATING RECENT/SCHEDULED TASKS
 
   public aggregateScheduled(bots){

@@ -1,7 +1,6 @@
 import { Component,ViewChild, AfterViewInit } from '@angular/core';
 import { Auth } from '../shared/auth.service';
 import { Router } from '@angular/router';
-import { SearchComponent } from '../search/search.component';
 import { ModalComponent } from 'ng2-bs3-modal/ng2-bs3-modal';
 import { BotService } from '../shared/bot.service';
 
