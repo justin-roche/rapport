@@ -10,6 +10,7 @@ import { ContactComponent } from '../contact/contact.component';
 import { SearchComponent } from '../search/search.component';
 import { ModalComponent } from 'ng2-bs3-modal/ng2-bs3-modal';
 import { Store } from '../shared/store';
+import { Reducers } from '../shared/reducers';
 
 @Component({
   selector: 'manage-component',
@@ -26,6 +27,8 @@ export class ManageComponent {
 
   title = 'My Bots';
 
+  private state;
+
   private bots: Array<customBot>;
   private selectedBot: customBot;
   private selectedTask;
@@ -35,7 +38,7 @@ export class ManageComponent {
   private customMessage;
   private customInterval;
   private customDate;
-  
+
   private activities: Array<string>;
   private contacts: Array<gmailContact>;
   private tasks: Array<string>;
@@ -51,18 +54,17 @@ export class ManageComponent {
                     success: false,
                     };
   //
-  constructor(private botService: BotService,private router: Router,private store: Store) {
-
-    store.state.subscribe(nextState => {
-      this.bots = nextState.bots.userBots;
+  constructor(private botService: BotService,private router: Router,private store: Store, private reducers: Reducers) {
+    store.state.subscribe((nextState)=>{
       this.selectedBot = nextState.bots.selectedBot;
-      this.tasks = nextState.tasks.allTasks;
-
+      this.bots = nextState.bots.userBots;
     });
-
-
   }
 
+  ngOnInit(){
+    if(!this.selectedBot) this.reducers.dispatch('SET-SELECTED-BOT', this.bots[0]);
+  }
+  
    //<-------------------DISPLAY MODE------------------->
   pageMode(mode){
     this.mode = mode;
@@ -183,9 +185,9 @@ export class ManageComponent {
     }
   }
 
-  private ngOnInit(): void {
-    this.reload();
-    this.onSelectBot(this.bots[0]);
-  }
+  // private ngOnInit(): void {
+  //   this.reload();
+  //   this.onSelectBot(this.bots[0]);
+  // }
 
 }

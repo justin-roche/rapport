@@ -45,13 +45,19 @@ public dispatch(type,payload){
         state.tasks.allTasks = payload; 
         this.decorators.decorateTasks(state.tasks.allTasks);
         break;
-
+      case 'ADD-NEW-BOT': 
+        state.bots.userBots.push(payload);
+        break;
       case 'SET-BOT-TYPES': 
         state.bots.botTypes = payload.bots; 
         this.decorators.decorateBots(state.bots.botTypes);
         break;
       case 'SET-SELECTED-TYPE':
         state.setupView.selectedType = payload;
+        break;
+      case 'SET-SELECTED-BOT':
+        state.bots.selectedBot = payload;
+        break;
       case 'SET-BOTS': 
         state.bots.userBots = payload; 
         this.decorators.decorateBots(state.bots.userBots);
