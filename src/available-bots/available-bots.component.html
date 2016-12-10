@@ -1,0 +1,26 @@
+<table class="table">
+      <thead class="thead-inverse">
+        <tr>
+          <th>MY BOTS</th>
+        </tr>
+      </thead>
+        <tbody >
+          <tr *ngFor="let bot of (store.state | async)?.bots.userBots"
+                [class.selected]="bot === (store.state | async)?.bots.selectedBot"
+                >
+
+                <td *ngIf="editableBot !== bot" class="">
+                  <p (click)="reducers.dispatch('SELECT-BOT',bot)">
+                    {{bot.botName}}-{{bot.botType}}
+                    <span class="glyphicon glyphicon-pencil" (click)="editableBot = bot"></span>
+                  </p>
+                </td>
+
+                <td *ngIf="editableBot === bot" class="">
+                  <input type="text" [(ngModel)]="customBotName">
+                  <span class="glyphicon glyphicon-ok" (click) = "editableBot= null; bot.botName = customBotName" ></span>
+                </td>
+
+          </tr>
+    </tbody>
+</table>

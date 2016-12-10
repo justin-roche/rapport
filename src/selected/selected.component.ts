@@ -11,6 +11,10 @@ import { Reducers } from '../shared/reducers';
 
 export class SelectedContactsComponent {
 
+  private uiVars = {newContact:{name: "", string: ""},
+                    editContact: "",
+                    success: false,
+                    };
 
   constructor(private store: Store, private reducers: Reducers){
     

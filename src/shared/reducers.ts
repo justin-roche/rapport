@@ -102,6 +102,10 @@ public dispatch(type,payload){
         this.decorators.addToAvailableContacts(state.bots.selectedBot, payload);
         break;
 
+      case 'EDIT-SELECTED-TASK':
+        state.tasks.editableTask = payload;
+        break;
+
       case 'DELETE-TASK': 
         // payload.bot.tasks = payload.bot.tasks.filter(function(task){
         //   return task !== payload.task;

@@ -1,0 +1,39 @@
+<modal #myModal>
+      <div id="modal-style">
+
+        <div class="semi-header">
+          <h2>EDIT TASK:</h2>
+        </div>
+
+        <div *ngIf="selectedTask && selectedTask.decorated.holidays === true" class="form-group">
+          <select class="selectpicker" [(ngModel)]="subTask">
+            <option *ngFor="let holiday of botService.holidays">
+              {{holiday.name}}
+            </option>
+          </select>
+        </div>
+
+        <div>
+          <span>Custom message:</span>
+          <textarea class="text" [(ngModel)]="customMessage"></textarea>
+        </div>
+
+        <div *ngIf="selectedTask && selectedTask.decorated.setsDate" class="form-group">
+          <span>Start Date</span>
+          <input class="selectBday" type="date" style="width:170px; border: 0px;" [(ngModel)]="customDate"/>
+        </div>
+
+        <div *ngIf="selectedTask && selectedTask.decorated.setsInterval" class="form-group">
+          <span>Send message every</span>
+          <input class="fb-input" type="text" [(ngModel)]="customInterval">
+          <span>months</span>
+        </div>
+
+        <div class="buttons" style="float: right">
+          <button class="retire" (click)="close()">Cancel</button>
+          <button class="save-bots" (click)="close();">OK</button>
+        </div>
+
+      </div>
+</modal>
+    

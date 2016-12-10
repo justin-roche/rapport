@@ -22,6 +22,7 @@ export class Store {
       scheduled: null,
     },
     tasks: {
+      editableTask: null,
       holidays: null,
       allTasks: null,
     },

@@ -1,16 +1,42 @@
-<tr class="" *ngFor="let contact of (store.state | async)?.bots.selectedBot.decorated.selectedContacts">
-    <td>
-      <div *ngIf="contact">
-        <div [hidden]="contact.editContact" >
-          <p>{{contact.name}}
-          <span class="glyphicon glyphicon-remove" (click)="reducers.dispatch('REMOVE-SELECTED-CONTACT',contact)"></span>
-          <span (click)="contact.editContact = true" class="glyphicon glyphicon-pencil"></span>
-          </p>
-        </div>
-        <div *ngIf="contact.editContact === true">
-          <span class="glyphicon glyphicon-ok" (click)="contact.editContact = false"></span>
-          birthday: <input class="selectBday" type="date" style="width:170px; border: 0px;" [(ngModel)]="contact.birthday"/>
-        </div>
-      </div>
-    </td>
-</tr>
+<table class="table">
+      <thead class="thead-inverse">
+        <tr>
+            <th>SELECTED CONTACTS FOR TASKS</th>
+            <div>
+            <span type="button" class="glyphicon glyphicon-plus dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            </span>
+            <div class="dropdown-menu">
+               <span class="dropdown-item glyphicon glyphicon-ok" (click)="uiVars.addContact = false; createNewContact(uiVars.newContact)"></span>
+              name:<input class="dropdown-item fb-input" type="text" [(ngModel)]="uiVars.newContact.name">
+              <br>
+              <span class="dropdown-item glyphicon glyphicon-remove" (click)="uiVars.addContact = false"></span>
+              email: <input class="dropdown-item fb-input" type="text" [(ngModel)]="uiVars.newContact.email">
+            </div>
+            </div>
+        </tr>
+      </thead>
+      <tbody>
+        <tr class="list-container">
+          <td class="list-contents">
+            <tr class="" *ngFor="let contact of (store.state | async)?.bots.selectedBot.decorated.selectedContacts">
+                <td>
+                  <div *ngIf="contact">
+                    <div [hidden]="contact.editContact" >
+                      <p>{{contact.name}}
+                      <span class="glyphicon glyphicon-remove" (click)="reducers.dispatch('REMOVE-SELECTED-CONTACT',contact)"></span>
+                      <span (click)="contact.editContact = true" class="glyphicon glyphicon-pencil"></span>
+                      </p>
+                    </div>
+                    <div *ngIf="contact.editContact === true">
+                      <span class="glyphicon glyphicon-ok" (click)="contact.editContact = false"></span>
+                      birthday: <input class="selectBday" type="date" style="width:170px; border: 0px;" [(ngModel)]="contact.birthday"/>
+                    </div>
+                  </div>
+                </td>
+            </tr>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    
+    

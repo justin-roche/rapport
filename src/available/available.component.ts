@@ -8,10 +8,24 @@ import { Reducers } from '../shared/reducers';
   selector: 'available-contacts-component',
   providers: [FilterContacts],
   styleUrls: ['app/available/available.component.css'],
-  template: `<input type="text" [(ngModel)]="filterText">
+  template: `<table class="table">
+      <thead class="thead-inverse">
+        <tr>
+          <th>AVAILABLE CONTACTS</th>
+        </tr>
+      </thead>
+        <tbody>
+        <tr class="list-container">
+          <td class="list-contents">
+            <input type="text" [(ngModel)]="filterText">
               <ul class="contact-list">
                  <li (click)="reducers.dispatch('ADD-SELECTED-CONTACT',contact)" *ngFor="let contact of (store.state | async)?.bots.selectedBot.decorated.availableContacts | filterContacts: filterText"> {{ contact.fullName || contact.name }} </li>
-               </ul>`,         
+               </ul>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    `,         
 })
 
 export class AvailableContactsComponent {

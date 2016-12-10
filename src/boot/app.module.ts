@@ -19,8 +19,10 @@ import { AppComponent }        from '../app/app.component';
 import { LandingPageComponent }   from '../landing-page/landing-page.component';
 import { SetupComponent }    from '../setup/setup.component';
 import { ManageComponent }    from '../manage/manage.component';
+import { TaskModalComponent }    from '../task-modal/task-modal.component';
 import { ContactComponent }    from '../contact/contact.component';
 import { HomePageComponent } from '../home-page/home.component';
+import { AvailableBotsComponent } from '../available-bots/available-bots.component';
 import { AvailableContactsComponent } from '../available/available.component';
 import { SelectedContactsComponent } from '../selected/selected.component';
 import { SearchTasksComponent } from '../search-tasks/search-tasks.component';
@@ -51,7 +53,9 @@ import { DecoratorService } from '../shared/decorator.service';
     LandingPageComponent,
     SetupComponent,
     ManageComponent,
+    TaskModalComponent,
     ContactComponent,
+    AvailableBotsComponent,
     AvailableContactsComponent,
     SelectedContactsComponent,
     SearchTasksComponent,

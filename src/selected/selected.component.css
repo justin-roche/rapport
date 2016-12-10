@@ -1,0 +1,155 @@
+body {
+  margin: 0;
+}
+
+html {
+  margin: 0;
+}
+
+.subTask {
+  font-size: 12;
+  text-align: right;
+}
+
+button {
+  border-width: 0px;
+  background-color: #5FC584;
+  padding: 0.3em 1.2em 0.3em;
+  margin: 1em;
+  color: white;
+  text-transform: uppercase;
+  margin: 0.5em;
+  font-family: 'Inconsolata', monospace;
+  letter-spacing: 0.3em;
+  -webkit-box-shadow: 4px 5px 5px -1px rgba(0,0,0,0.2);
+  -moz-box-shadow: 4px 5px 5px -1px rgba(0,0,0,0.2);
+  box-shadow: 4px 5px 5px -1px rgba(0,0,0,0.2);
+}
+
+.glyphicon {
+  color: #CCC;
+  float:right;
+}
+
+.save-bots {
+  background-color: #5FC584;
+}
+
+.send-now {
+  background-color: #5DBCD2;
+}
+
+.retire {
+  background-color: #F48260;
+}
+
+.buttons {
+  margin-top: 0em;
+  float: right;
+  margin-right:11em;
+}
+
+.control-container {
+  position:relative;
+  background-color: #e5f9ff;
+  margin: auto;
+}
+
+.heroes {
+  position:relative;
+}
+
+.mycontainer {
+  padding-top:13em;
+  margin:auto;
+}
+
+.submenu {
+/*  background-color:gray;
+  width:15em;
+  height:8em;*/
+}
+
+video.vid {
+  min-width: 100%;
+  min-height: 100%;
+  width: auto;
+  height: auto;
+  background: repeat;
+  background-size: cover;
+  position: absolute;
+  right: -20%;
+  top:-80%;
+  z-index: -999;
+}
+
+/*STYLES FROM CONTACT COMPONENT*/
+
+label {
+  display: inline-block;
+  width: 3em;
+  margin: .5em 0;
+  color: #607D8B;
+  font-weight: bold;
+}
+input {
+  height: 1em;
+  font-size: 1em;
+  padding-left: .4em;
+}
+button {
+  margin-top: 20px;
+  font-family: Arial;
+  background-color: #eee;
+  border: none;
+  padding: 5px 10px;
+  border-radius: 4px;
+  cursor: pointer; cursor: hand;
+}
+button:hover {
+  background-color: #cfd8dc;
+}
+button:disabled {
+  background-color: #eee;
+  color: #ccc;
+  cursor: auto;
+}
+html {
+  margin: 0;
+}
+
+body {
+  margin: 0;
+}
+
+input {
+  height:1.5em;
+}
+
+.selectBday {
+  float:right;
+}
+
+.checkbox {
+  float:right;
+}
+
+.text {
+    width: 90%;
+    /* margin: auto; */
+    position: relative;
+    margin-left: 10px;
+    border: 1px solid #ccc;
+    color:#999;
+    font-style:italic;
+}
+
+#modal-style {
+  padding:3em 2em 1em 4em;
+  height:430px;
+}
+
+#modal-style div {
+  margin-top:1em;
+  margin-bottom:1em;
+}
