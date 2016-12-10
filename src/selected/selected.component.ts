@@ -12,7 +12,7 @@ import { Reducers } from '../shared/reducers';
 export class SelectedContactsComponent {
 
 
-  constructor(private store: Store){
+  constructor(private store: Store, private reducers: Reducers){
     
   }
 

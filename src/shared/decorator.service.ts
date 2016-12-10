@@ -15,6 +15,10 @@ export class DecoratorService {
 
 //<----------------------DATA TRANSFORMATIONS FROM BACKEND TO FRONTEND---------------------->
 
+// the model of API-client interaction is that the objects are decorated on the client side, e.g. modified for display. 
+// The modifications for each bot exist in the .decorated property
+
+//todo: centralize botExtensions and botTypes as used on the server so they can be shared and tested together
 
   private botExtensions = {
     'basic': {
@@ -37,6 +41,7 @@ export class DecoratorService {
   public decorateBots(bots){
     bots.forEach((bot)=>{
       bot.decorated = JSON.parse(JSON.stringify(this.botExtensions[bot.botType]));
+      this.addContactsProperties(bot);
       this.addPotentialTasks(bot);
       this.decorateTasks(bot.tasks);
     });
@@ -44,6 +49,22 @@ export class DecoratorService {
 
 //<----------------------ADDING POTENTIAL TASKS
 
+//todo: consistent use of "friends" vs. "contacts" for everything
+
+public addContactsProperties(bot){
+     if(bot.decorated.platform === 'gmail'){
+        bot.decorated.availableContacts = this.store.state.getValue().user.gmailContacts;
+        bot.decorated.selectedContacts = bot.selectedContacts; 
+      } else {
+        bot.decorated.availableContacts = this.store.state.getValue().user.fbContacts;
+        bot.decorated.selectedContacts = bot.selectedFbFriends; 
+     }
+}
+
+//<----------------------ADDING POTENTIAL TASKS
+
+//the api sends all possible tasks with a single call, they must be filtered for platform before being added as potential 
+//tasks for a bot
 
   public addPotentialTasks(bot){
     this.allTasks.forEach((_potentialTask)=>{
@@ -61,6 +82,10 @@ export class DecoratorService {
   }
 
 //<----------------------EXTENDING TASKS
+
+//tasks are decorated similarly with any missing information needed for display
+
+//todo: factor into separate file
 
   private taskExtensions = {
     'sayHiGmail':           {formattedName: 'message on gmail',
@@ -87,6 +112,8 @@ export class DecoratorService {
                             holidays: true}, 
   };
 
+ //to mark subtasks they are checked for date and type properties
+ 
   public decorateTasks(tasks){
     tasks.forEach((task)=>{
       task.decorated = Object.assign({},this.taskExtensions[task.task]);
@@ -130,35 +157,34 @@ export class DecoratorService {
       return contact.name != "";
     })
   }
-  
-  public chooseAvailableContacts(bot){
-    if(bot.decorated.platform === 'gmail'){
-      return this.store.state.getValue().user.gmailContacts;
-    } else {
-      return this.store.state.getValue().user.fbContacts;
-    }
-  }
 
-  public chooseSelectedContacts(bot){
-    if(bot.decorated.platform === 'gmail'){
-      return bot.selectedContacts;
-    } else {
-      return bot.selectedFbFriends; 
-    }
-  }
+  // public setSelectedContacts(bot){
+  //   if(bot.decorated.platform === 'gmail'){
+  //     return bot.decorated.selectedContacts;
+  //   } else {
+  //     return bot.selectedFbFriends; 
+  //   }
+  // }
+
+  //<----------------------ADDING AND REMOVING CONTACTS TO AVAILABLE AND SELECTED CONTACTS
 
   public addToSelectedContacts(bot, contact){
-    if(bot.decorated.platform === 'gmail'){
-      bot.selectedContacts.push(contact);
-    } else {
-      bot.selectedFbFriends.push(contact);
-    }
+      bot.decorated.selectedContacts.push(contact);
   }
 
-  public removeFromAvailableContacts(removed){
-    return this.store.state.getValue().manageView.availableContacts.filter(contact=>{
+  public removeFromSelectedContacts(bot, contact){
+    var i = bot.decorated.selectedContacts.indexOf(contact);
+    bot.decorated.selectedContacts.splice(i,1);
+  }
+
+  public removeFromAvailableContacts(bot, removed){
+    bot.decorated.availableContacts = bot.decorated.availableContacts.filter(contact=>{
       return contact !== removed; 
     });
+  }
+
+  public addToAvailableContacts(bot, added){
+    bot.decorated.availableContacts = bot.decorated.availableContacts.concat(added);
   }
   //<----------------------AGGREGATING RECENT/SCHEDULED TASKS
 

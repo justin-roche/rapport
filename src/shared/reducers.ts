@@ -62,8 +62,8 @@ public dispatch(type,payload){
 
       case 'SET-SELECTED-BOT':
         state.bots.selectedBot = payload;
-        state.manageView.availableContacts = this.decorators.chooseAvailableContacts(state.bots.selectedBot);
-        state.manageView.selectedContacts = this.decorators.chooseSelectedContacts(state.bots.selectedBot);
+        //state.manageView.availableContacts = this.decorators.chooseAvailableContacts(state.bots.selectedBot);
+        //state.manageView.selectedContacts = this.decorators.chooseSelectedContacts(state.bots.selectedBot);
         break;
 
       case 'SET-BOTS': 
@@ -94,7 +94,12 @@ public dispatch(type,payload){
 
       case 'ADD-SELECTED-CONTACT':
         this.decorators.addToSelectedContacts(state.bots.selectedBot, payload);
-        state.manageView.availableContacts = this.decorators.removeFromAvailableContacts(payload);
+        this.decorators.removeFromAvailableContacts(state.bots.selectedBot, payload);
+        break;
+
+      case 'REMOVE-SELECTED-CONTACT':
+        this.decorators.removeFromSelectedContacts(state.bots.selectedBot, payload);
+        this.decorators.addToAvailableContacts(state.bots.selectedBot, payload);
         break;
 
       case 'DELETE-TASK': 

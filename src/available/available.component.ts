@@ -10,7 +10,7 @@ import { Reducers } from '../shared/reducers';
   styleUrls: ['app/available/available.component.css'],
   template: `<input type="text" [(ngModel)]="filterText">
               <ul class="contact-list">
-                 <li (click)="reducers.dispatch('ADD-SELECTED-CONTACT',contact)" *ngFor="let contact of (store.state | async)?.manageView.availableContacts | filterContacts: filterText"> {{ contact.fullName || contact.name }} </li>
+                 <li (click)="reducers.dispatch('ADD-SELECTED-CONTACT',contact)" *ngFor="let contact of (store.state | async)?.bots.selectedBot.decorated.availableContacts | filterContacts: filterText"> {{ contact.fullName || contact.name }} </li>
                </ul>`,         
 })
 

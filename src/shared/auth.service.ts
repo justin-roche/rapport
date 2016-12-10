@@ -47,11 +47,11 @@ export class Auth {
     
     this.reducers.dispatch('SET-AUTH-RESULT',authResult);
     this.apiService.signIn()
+    .then(this.apiService.getGmailContacts.bind(this.apiService))
     .then(this.apiService.getHolidays.bind(this.apiService))
     .then(this.apiService.getAllTasks.bind(this.apiService))
     .then(this.apiService.getBotTypes.bind(this.apiService))
     .then(this.apiService.getBots.bind(this.apiService))
-    .then(this.apiService.getGmailContacts.bind(this.apiService))
     .then(this.fbService.tryContacts.bind(this))
     .then(this.route.bind(this));
   }

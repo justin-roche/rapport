@@ -1,9 +1,9 @@
-<tr class="" *ngFor="let contact of (store.state | async)?.manageView.selectedContacts">
+<tr class="" *ngFor="let contact of (store.state | async)?.bots.selectedBot.decorated.selectedContacts">
     <td>
       <div *ngIf="contact">
         <div [hidden]="contact.editContact" >
           <p>{{contact.name}}
-          <span class="glyphicon glyphicon-remove" (click)="reducers.dispatch('REMOVE-SELECTED-CONTACT',contact')"></span>
+          <span class="glyphicon glyphicon-remove" (click)="reducers.dispatch('REMOVE-SELECTED-CONTACT',contact)"></span>
           <span (click)="contact.editContact = true" class="glyphicon glyphicon-pencil"></span>
           </p>
         </div>
