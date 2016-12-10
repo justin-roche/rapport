@@ -2,27 +2,22 @@
     <source src="https://s3.amazonaws.com/nth-hack-reactor/rapport-assets/rapportDashboard.mp4" type="video/mp4">
   </video >
 
-
   <task-modal-component></task-modal-component>
 
 <div>
 
+  <div id="container-top-header">
 
-<!-- TITLE -->
-
-<div id="container-top-header">
-
-  
-  <div id="container-header" class="col-md-12">
-    <div id="title-section" >
-      MANAGE BOTS
+    <div id="container-header" class="col-md-12">
+      <div id="title-section" >
+        MANAGE BOTS
+      </div>
+      <div id="title-section desc">
+        Each bot is pre-configured with basic tasks to suite each type of user
+      </div>
     </div>
-    <div id="title-section desc">
-      Each bot is pre-configured with basic tasks to suite each type of user
-    </div>
-  </div>
 
-<div *ngIf = "mode === 'bot'" class="mycontainer" >
+<div class="mycontainer" >
 
   <div class="col-md-2">
       <available-bots-component></available-bots-component>
@@ -49,7 +44,7 @@
     </div>
     <button class="save-bots" (click)="submitAllSettings()"> Save Bots! </button>
     <button class="send-now" (click)="sendNow()"> Send Now! </button>
-    <span *ngIf="selectedBot.id">
+    <span *ngIf="(store.state | async)?.bots.selectedBot.id">
       <button class="retire" (click)="retireBot()"> Retire Bot </button>
     </span>
   </div>

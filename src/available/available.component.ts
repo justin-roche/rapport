@@ -39,19 +39,11 @@ export class AvailableContactsComponent {
     });
   }
 
+  //implment
+  // createNewContact(contact){
+  //   this.selectedBot.selectedContacts.push(contact);
+  // }
+
  }
 
-  //reload: void {
-    // if(this.bot.botType === 'social'){
-    //   this.contacts = this.fbService.contacts;
-    //   const addedFriends = this.bot.selectedFbFriends.map(contact => contact.vanity);
-    //   this.contacts = this.contacts.filter(contact => {
-    //     return addedFriends.indexOf(contact.vanity) === -1;
-    //   });
-    // } else {
-    //   // this.contacts = this.gmailService.contacts.filter(contact => {
-    //   //   const selectedContactNames = this.bot.selectedContacts.map(contact => contact.name);
-    //   //   return contact.name && contact.email && selectedContactNames.indexOf(contact.name) === -1;
-    //   // });
-    // }
-  //}
+  

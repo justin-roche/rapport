@@ -20,6 +20,11 @@ export class SelectedContactsComponent {
     
   }
 
+  //implement
+  // createNewContact(contact){
+  //   this.selectedBot.selectedContacts.push(contact);
+  // }
+
   
 }
 

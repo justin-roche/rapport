@@ -1,18 +1,14 @@
 import { Component, ViewChild } from '@angular/core';
-import { customBot, gmailContact } from '../shared/custom-type-classes';
-//change
-import { BotService } from '../shared/bot.service';
 import { OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import {FbService} from '../shared/fb.service';
 
 import { ContactComponent } from '../contact/contact.component';
 import { AvailableContactsComponent } from '../available/available.component';
-import { Store } from '../shared/store';
-import { Reducers } from '../shared/reducers';
-
 import { SearchTasksComponent } from '../search-tasks/search-tasks.component';
 import { ModalComponent } from 'ng2-bs3-modal/ng2-bs3-modal';
+
+import { Store } from '../shared/store';
+import { Reducers } from '../shared/reducers';
 
 @Component({
   selector: 'manage-component',
@@ -22,100 +18,33 @@ import { ModalComponent } from 'ng2-bs3-modal/ng2-bs3-modal';
 
 export class ManageComponent {
 
-  
-  
-
-
   title = 'My Bots';
-
-  private state;
-
-  private bots: Array<customBot>;
-  private selectedBot: customBot;
-  private selectedTask;
-  private subTask;
-
-  private displayMessage;
-  private customMessage;
-  private customInterval;
-  private customDate;
-
-  private activities: Array<string>;
-  private contacts: Array<gmailContact>;
-  private tasks: Array<string>;
-  private mode = "bot";
-
-  private scheduled;
-  private customBotName;
-  private recent;
 
   private uiVars = {};
   
-  //
-  constructor(private botService: BotService,private router: Router,private store: Store, private reducers: Reducers) {
+  constructor(private router: Router,private store: Store, private reducers: Reducers) {
     store.state.subscribe((nextState)=>{
-      this.selectedBot = nextState.bots.selectedBot;
-      this.bots = nextState.bots.userBots;
-      
+      if(nextState.bots.userBots.length === 0){
+        this.router.navigate(['setup']);
+      }
+      if(nextState.bots.userBots.length >0 && !nextState.bots.selectedBot) {
+        this.reducers.dispatch('SET-SELECTED-BOT', nextState.bots.userBots[0]);
+      }
     });
   }
 
-  ngOnInit(){
-    if(!this.selectedBot) {
-      this.reducers.dispatch('SET-SELECTED-BOT', this.bots[0]);
-    }
-  }
-  
-   //<-------------------DISPLAY MODE------------------->
-  pageMode(mode){
-    this.mode = mode;
-  }
-
-  //<-------------------TASK METHODS------------------->
-
-  saveTask(){
-    if(this.selectedTask.task === 'sayHappyHolidayGmail'){
-      var opts = {name: this.subTask, message: this.customMessage};
-      this.botService.addNewHolidayTask(opts, this.selectedBot);
-    } else {
-      this.customMessage? this.selectedTask.message = this.customMessage: 1;
-      this.customInterval? this.selectedTask.interval = this.customInterval: 1;
-      this.customDate? this.selectedTask.date = this.customDate: 1;
-    }
-    this.reload();
-    this.tasks = this.selectedBot.tasks;
-  }
-
-
-   private canSetDate(){
-    return this.selectedTask && this.selectedTask.task !== 'sayHappyBirthdayGmail';
-  }
-
-  //<-------------------BOT METHODS------------------->
-
-  private onSelectBot(bot: any): void {
-    this.selectedBot = bot;
-    this.activities = bot.botActivity.recent;
-
-    //these contacts are the selectedContacts for the bot, not the availableContacts
-    //should be componentized
-    if(this.selectedBot.botType === 'social'){
-      this.contacts = bot.selectedFbFriends;
-    } else {
-      this.contacts = bot.selectedContacts;
-    }
-    this.tasks = bot.tasks;
-  }
-
   private submitAllSettings(): void{
-    var self = this;
-    this.botService.updateBots(this.bots).then(_=>{
-      this.reload();
-      if(!this.selectedBot.id){
-        this.selectedBot = this.bots[this.bots.length-1];
-      }
+    //call reducer
+    //show success
+  }
+
+  private retireBot(bot): void {
+      //call reducer
       //this.showSuccess(); 
-    })
+  }
+
+  private sendNow(): void {
+    //call reducer
   }
 
   // private showSuccess(){
@@ -126,58 +55,8 @@ export class ManageComponent {
   //   },1000);
   // }
 
-  private retireBot(bot): void {
-    var self =this;
-    this.botService.retireBot(this.selectedBot).then(_=>{
-      this.reload();
-      if(this.bots.length === 0){
-        self.router.navigate(['setup']);
-      } else {
-        //this.showSuccess(); 
-      }
-    })
+  ngOnInit(){
+    
   }
-
-  //<-----------------ADD CONTACTS METHODS----------------->
-
-  createNewContact(contact){
-    this.selectedBot.selectedContacts.push(contact);
-  }
-
-  //<-----------------SELECTED CONTACTS METHODS----------------->
-
-  private removeSelectedContact(contact): void{
-    var i = this.contacts.indexOf(contact);
-    this.contacts.splice(i,1);
-    if(this.selectedBot.botType === 'social'){
-      this.botService.removeSelectedFbContact(contact).then(_=>{
-        this.reload();
-      })
-    } else {
-      this.botService.removeSelectedContact(contact).then(_=>{
-        this.reload();
-      })
-    }
-  }
-
-  private sendNow(): void {
-    this.botService.sendNow()
-      .then(console.log)
-      .then(() => this.botService.importUserBots());
-  }
-
-  private reload() : void {
-    this.scheduled = this.botService.scheduled;
-    this.recent = this.botService.recent;
-    this.bots = this.botService.userBots;
-    if(this.selectedBot){
-      this.tasks = this.selectedBot.tasks;
-    }
-  }
-
-  // private ngOnInit(): void {
-  //   this.reload();
-  //   this.onSelectBot(this.bots[0]);
-  // }
 
 }

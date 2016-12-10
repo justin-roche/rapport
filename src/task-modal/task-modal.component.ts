@@ -33,5 +33,20 @@ export class TaskModalComponent {
     this.reducers.dispatch('EDIT-SELECTED-TASK',null);
   }
 
+  // private canSetDate(){
+  //   return this.selectedTask && this.selectedTask.task !== 'sayHappyBirthdayGmail';
+  // }
+
+  saveTask(){
+    //if(this.selectedTask.task === 'sayHappyHolidayGmail'){
+      // var opts = {name: this.subTask, message: this.customMessage};
+      // this.botService.addNewHolidayTask(opts, this.selectedBot);
+    //} else {
+      // this.customMessage? this.selectedTask.message = this.customMessage: 1;
+      // this.customInterval? this.selectedTask.interval = this.customInterval: 1;
+      // this.customDate? this.selectedTask.date = this.customDate: 1;
+   // }
+  }
+
   
 }
