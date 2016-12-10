@@ -124,6 +124,29 @@
     </table>
   </div>-->
 
+  <div class="col-md-3">
+    <table class="table">
+      <thead class="thead-inverse">
+        <tr>
+          <th>TASKS</th>
+          <div *ngIf="selectedBot.decorated.potentialTasks.length > 0" class="btn-group">
+            <!--<span type="button" class="glyphicon glyphicon-plus dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            </span>
+            <div class="dropdown-menu">
+              <p *ngFor="let potentialTask of selectedBot.decorated.potentialTasks" class="dropdown-item" href="#"
+              (click)="store.actions('ADD-TASK',{bot: selectedBot, task: potentialTask})">
+                {{potentialTask.decorated.formattedName}}
+              </p>
+            </div>-->
+          </div>
+        </tr>
+      </thead>
+        <tbody>
+          <tasks-component></tasks-component>
+      </tbody>
+    </table>
+  </div>
+
   <div class="col-md-4">
     <table class="table">
       <thead class="thead-inverse">

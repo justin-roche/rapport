@@ -23,6 +23,7 @@ import { ContactComponent }    from '../contact/contact.component';
 import { HomePageComponent } from '../home-page/home.component';
 import { AvailableContactsComponent } from '../available/available.component';
 import { SelectedContactsComponent } from '../selected/selected.component';
+import { SearchTasksComponent } from '../search-tasks/search-tasks.component';
 import { FilterContacts } from '../available/contact.pipe';
 import { LoadingComponent } from '../loading/loading.component';
 import { ActivitiesTable } from '../activities-table/activities-table.component';
@@ -53,6 +54,7 @@ import { DecoratorService } from '../shared/decorator.service';
     ContactComponent,
     AvailableContactsComponent,
     SelectedContactsComponent,
+    SearchTasksComponent,
     FilterContacts,
     LoadingComponent
   ],

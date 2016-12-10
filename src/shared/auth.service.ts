@@ -25,13 +25,12 @@ export class Auth {
   lock = new Auth0Lock('pA75v0B8UDfNOk0h2tDnz5in4Je3AZHL', 'rapport.auth0.com', {});
   constructor(private apiService: ApiService, private reducers: Reducers, private store: Store, private http: Http, private router:Router, private botService: BotService, private fbService: FbService) {
 
-    
-
     this.lock.on("authenticated", (authResult) => {
       localStorage.setItem('id_token', authResult.idToken);
       this.router.navigate(['loading']);
       this.onAuthentication(authResult);
     });
+    
   }
   
   public login() {

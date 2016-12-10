@@ -12,6 +12,8 @@ import { ModalComponent } from 'ng2-bs3-modal/ng2-bs3-modal';
 import { Store } from '../shared/store';
 import { Reducers } from '../shared/reducers';
 
+import { SearchTasksComponent } from '../search-tasks/search-tasks.component';
+
 @Component({
   selector: 'manage-component',
   templateUrl: 'app/manage/manage.component.html',
