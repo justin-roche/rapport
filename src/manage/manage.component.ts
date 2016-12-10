@@ -40,6 +40,8 @@ export class ManageComponent {
 
   private retireBot(bot): void {
       //call reducer
+      //where to do decorators.undecorate(bots) step? api/reducer/here
+      //make deep copy in apis and call it there so state isn't affected?
       //this.showSuccess(); 
   }
 

@@ -20,7 +20,7 @@ export class SelectedContactsComponent {
     
   }
 
-  //implement
+  //impelement
   // createNewContact(contact){
   //   this.selectedBot.selectedContacts.push(contact);
   // }

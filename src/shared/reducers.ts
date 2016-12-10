@@ -106,16 +106,6 @@ public dispatch(type,payload){
         state.tasks.editableTask = payload;
         break;
 
-      case 'DELETE-TASK': 
-        // payload.bot.tasks = payload.bot.tasks.filter(function(task){
-        //   return task !== payload.task;
-        // });
-        //this.botService.deletedTasks.push(payload.task.id);
-        // if(!payload.task.decorated.subTask){
-        //   payload.bot.decorated.potentialTasks.push(payload.task); 
-        // }
-        break;
-
       case 'ADD-TASK': 
         // payload.bot.tasks.push(payload.task);
         // payload.bot.decorated.potentialTasks = payload.bot.decorated.potentialTasks.filter(function(task){
@@ -125,9 +115,11 @@ public dispatch(type,payload){
         //   return task.id !== payload.task.id;
         // })
         // break;
+        
+      case 'DELETE-TASK': 
+        //implement
+        break;
 
-
-      
       default: 
         alert('unhandled action');
     }

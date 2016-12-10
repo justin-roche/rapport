@@ -38,12 +38,21 @@ export class DecoratorService {
     }
   }
 
+  //prepare bot objects for disaply
   public decorateBots(bots){
     bots.forEach((bot)=>{
       bot.decorated = JSON.parse(JSON.stringify(this.botExtensions[bot.botType]));
       this.addContactsProperties(bot);
       this.addPotentialTasks(bot);
       this.decorateTasks(bot.tasks);
+    });
+  }
+
+  //prepare for sending back to the server
+  public undecorateBots(bots){
+    bots.forEach((bot)=>{
+      this.normalizeDates(bot);
+      this.transferContacts(bot);
     });
   }
 
@@ -159,11 +168,7 @@ public addContactsProperties(bot){
   }
 
   // public setSelectedContacts(bot){
-  //   if(bot.decorated.platform === 'gmail'){
-  //     return bot.decorated.selectedContacts;
-  //   } else {
-  //     return bot.selectedFbFriends; 
-  //   }
+  
   // }
 
   //<----------------------ADDING AND REMOVING CONTACTS TO AVAILABLE AND SELECTED CONTACTS
@@ -219,6 +224,16 @@ public addContactsProperties(bot){
           task.date = String(month) + '/' + String(day);
         }
       })
+    })
+  }
+
+  public transferContacts(bots){
+    bots.forEach(function(bot){
+      if(bot.decorated.platform === 'gmail'){
+        bot.selectedContacts = bot.decorated.selectedContacts;
+      } else {
+        bot.selectedFbFriends = bot.decorated.selectedContacts; 
+      }
     })
   }
 
