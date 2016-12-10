@@ -63,6 +63,7 @@ public dispatch(type,payload){
       case 'SET-SELECTED-BOT':
         state.bots.selectedBot = payload;
         state.manageView.availableContacts = this.decorators.chooseAvailableContacts(state.bots.selectedBot);
+        state.manageView.selectedContacts = this.decorators.chooseSelectedContacts(state.bots.selectedBot);
         break;
 
       case 'SET-BOTS': 

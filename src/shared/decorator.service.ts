@@ -139,6 +139,14 @@ export class DecoratorService {
     }
   }
 
+  public chooseSelectedContacts(bot){
+    if(bot.decorated.platform === 'gmail'){
+      return bot.selectedContacts;
+    } else {
+      return bot.selectedFbFriends; 
+    }
+  }
+
   public addToSelectedContacts(bot, contact){
     if(bot.decorated.platform === 'gmail'){
       bot.selectedContacts.push(contact);

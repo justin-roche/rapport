@@ -22,6 +22,7 @@ import { ManageComponent }    from '../manage/manage.component';
 import { ContactComponent }    from '../contact/contact.component';
 import { HomePageComponent } from '../home-page/home.component';
 import { AvailableContactsComponent } from '../available/available.component';
+import { SelectedContactsComponent } from '../selected/selected.component';
 import { FilterContacts } from '../available/contact.pipe';
 import { LoadingComponent } from '../loading/loading.component';
 import { ActivitiesTable } from '../activities-table/activities-table.component';
@@ -31,6 +32,7 @@ import { Store } from '../shared/store';
 import { Reducers } from '../shared/reducers';
 import { ApiService } from '../shared/api.service';
 import { DecoratorService } from '../shared/decorator.service';
+
 
 @NgModule({
   imports: [
@@ -50,6 +52,7 @@ import { DecoratorService } from '../shared/decorator.service';
     ManageComponent,
     ContactComponent,
     AvailableContactsComponent,
+    SelectedContactsComponent,
     FilterContacts,
     LoadingComponent
   ],

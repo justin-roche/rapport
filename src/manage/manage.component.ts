@@ -62,7 +62,9 @@ export class ManageComponent {
   }
 
   ngOnInit(){
-    if(!this.selectedBot) this.reducers.dispatch('SET-SELECTED-BOT', this.bots[0]);
+    if(!this.selectedBot) {
+      this.reducers.dispatch('SET-SELECTED-BOT', this.bots[0]);
+    }
   }
   
    //<-------------------DISPLAY MODE------------------->

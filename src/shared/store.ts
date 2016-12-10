@@ -30,6 +30,7 @@ export class Store {
     },
     manageView: {
       availableContacts: null,
+      selectedContacts: null,
     }
   }
 

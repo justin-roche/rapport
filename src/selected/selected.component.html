@@ -1,0 +1,16 @@
+<tr class="" *ngFor="let contact of (store.state | async)?.manageView.selectedContacts">
+    <td>
+      <div *ngIf="contact">
+        <div [hidden]="contact.editContact" >
+          <p>{{contact.name}}
+          <span class="glyphicon glyphicon-remove" (click)="reducers.dispatch('REMOVE-SELECTED-CONTACT',contact')"></span>
+          <span (click)="contact.editContact = true" class="glyphicon glyphicon-pencil"></span>
+          </p>
+        </div>
+        <div *ngIf="contact.editContact === true">
+          <span class="glyphicon glyphicon-ok" (click)="contact.editContact = false"></span>
+          birthday: <input class="selectBday" type="date" style="width:170px; border: 0px;" [(ngModel)]="contact.birthday"/>
+        </div>
+      </div>
+    </td>
+</tr>
