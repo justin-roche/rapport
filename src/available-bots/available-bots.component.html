@@ -17,8 +17,8 @@
                 </td>
 
                 <td *ngIf="editableBot === bot" class="">
-                  <input type="text" [(ngModel)]="customBotName">
-                  <span class="glyphicon glyphicon-ok" (click) = "editableBot= null; bot.botName = customBotName" ></span>
+                  <p>enter custom name:</p><input type="text" [(ngModel)]="customBotName">
+                  <span class="glyphicon glyphicon-ok" (click) = "editableBot= null; bot.botName = customBotName || 'MyBot'; customBotName=''" ></span>
                 </td>
 
           </tr>
