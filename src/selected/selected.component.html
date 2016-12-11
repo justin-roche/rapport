@@ -6,7 +6,7 @@
             <span type="button" class="glyphicon glyphicon-plus dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
             </span>
             <div class="dropdown-menu">
-               <span class="dropdown-item glyphicon glyphicon-ok" (click)="uiVars.addContact = false; createNewContact(uiVars.newContact)"></span>
+               <span class="dropdown-item glyphicon glyphicon-ok" (click)="uiVars.addContact = false; createNewContact()"></span>
               name:<input class="dropdown-item fb-input" type="text" [(ngModel)]="uiVars.newContact.name">
               <br>
               <span class="dropdown-item glyphicon glyphicon-remove" (click)="uiVars.addContact = false"></span>

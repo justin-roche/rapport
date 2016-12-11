@@ -7,7 +7,7 @@
             </span>
             <div class="dropdown-menu">
               <p *ngFor="let potentialTask of (store.state | async)?.bots.selectedBot.decorated.potentialTasks" class="dropdown-item" href="#"
-              (click)="store.actions('ADD-TASK',{bot: selectedBot, task: potentialTask})">
+              (click)="reducers.dispatch('ADD-TASK',potentialTask)">
                 {{potentialTask.decorated.formattedName}}
               </p>
             </div>
@@ -18,11 +18,11 @@
           <tr *ngFor="let task of (store.state | async)?.bots.selectedBot.tasks"
                 [class.subTask]="task.decorated && task.decorated.subTask === true"
                 [class.selected]="task === selectedTask"
-                (click)="reducers.dispatch('SELECTED-TASK',task)">
+                (click)="reducers.dispatch('SET-SELECTED-TASK',task)">
             {{task.name}}
             <p *ngIf="task.decorated && task.decorated.formattedName">
               {{task.decorated.formattedName}}
-            <span class="glyphicon glyphicon-remove" (click)="store.actions('DELETE-TASK',{bot: selectedBot, task: task})"></span>
+            <span class="glyphicon glyphicon-remove" (click)="reducers.dispatch('DELETE-TASK',task)"></span>
             <span class="glyphicon" [ngClass]="{'glyphicon-pencil': !task.decorated.masterTask, 'glyphicon-plus' : task.decorated.masterTask }" (click)="reducers.dispatch('EDIT-SELECTED-TASK',task)"></span>
             </p>
           </tr>

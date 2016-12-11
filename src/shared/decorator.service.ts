@@ -191,6 +191,41 @@ public addContactsProperties(bot){
   public addToAvailableContacts(bot, added){
     bot.decorated.availableContacts = bot.decorated.availableContacts.concat(added);
   }
+
+//<----------------------ADDING AND REMOVING TASKS FROM POTENTIAL/DELETED/TASKS
+
+public removeFromPotentialTasks(bot,task){
+  var i = bot.decorated.potentialTasks.indexOf(task);
+  bot.decorated.potentialTasks.splice(i,1);
+}
+
+public removeFromDeletedTasks(bot,task){
+  var i = bot.decorated.deletedTasks.indexOf(task);
+  bot.decorated.deletedTasks.splice(i,1);
+}
+
+public addToPotentialTasks(bot,task){
+  bot.decorated.potentialTasks.push(task);
+}
+
+public addToDeletedTasks(bot,task){
+  if(task.id){
+    bot.decorated.deletedTasks.push(task);
+  }
+}
+
+public editTask(task,opts){
+  for(var prop in opts){
+    task[prop] = opts[prop] || task[prop];
+  }
+}
+
+public aggregateDeletedTasks(bots){
+    return bots.reduce(function(acc,bot){
+      return acc.concat(bot.decorated.deletedTasks);
+    },[]);
+  }
+
   //<----------------------AGGREGATING RECENT/SCHEDULED TASKS
 
   public aggregateScheduled(bots){
@@ -206,16 +241,15 @@ public addContactsProperties(bot){
   }
 
   //<----------------------DATA TRANSFORMATIONS FROM FRONTEND TO BACKEND---------------------->
-  public normalizeDates(bots){
-    bots.forEach(function(bot){
-      bot.selectedContacts.forEach(function(contact){
+  public normalizeDates(bot){
+      bot.decorated.selectedContacts.forEach(function(contact){
         if(contact.birthday){
           var date = new Date(contact.birthday);
           var month = date.getMonth();
           var day = date.getDay();
           contact.birthday = String(month) + '/' + String(day);
         }
-      })
+      });
       bot.tasks.forEach(function(task){
         if(task.date && task.date !== 'today'){
           var date = new Date(task.date);
@@ -223,42 +257,39 @@ public addContactsProperties(bot){
           var day = date.getDay();
           task.date = String(month) + '/' + String(day);
         }
-      })
-    })
+      });
   }
 
-  public transferContacts(bots){
-    bots.forEach(function(bot){
+  public transferContacts(bot){
       if(bot.decorated.platform === 'gmail'){
         bot.selectedContacts = bot.decorated.selectedContacts;
       } else {
         bot.selectedFbFriends = bot.decorated.selectedContacts; 
       }
-    })
   }
 
    //<----------------------TASK ADDITION---------------------->
 
-  public addNewHolidayTask(taskOptions,bot){
-    // var date = this.holidays.filter(function(holiday){
-    //   return holiday.name === taskOptions.name;
-    // })[0].date;
+  public createHolidayTask(taskOptions){
+    var date = this.store.state.getValue().tasks.holidays.filter(function(holiday){
+      return holiday.name === taskOptions.name;
+    })[0].date;
 
-    // var task = {id: null,
-    //             id_bot: null,
-    //             interval: 12,
-    //             date: date,
-    //             message: taskOptions.message,
-    //             task: 'sayHappyHolidayGmail',
-    //             platform: 'gmail',
-    //             decorated: {
-    //                         formattedName: taskOptions.name,
-    //                         setsInterval: false,
-    //                         setsDate: false,
-    //                         subTask: true}
-    //             };
+    var task = {id: null,
+                id_bot: null,
+                interval: 12,
+                date: date,
+                message: taskOptions.message,
+                task: 'sayHappyHolidayGmail',
+                platform: 'gmail',
+                decorated: {
+                            formattedName: taskOptions.name,
+                            setsInterval: false,
+                            setsDate: false,
+                            subTask: true}
+                };
 
-    // bot.tasks.push(task);
+    return task;
   }
 
 

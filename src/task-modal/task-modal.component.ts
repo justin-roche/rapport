@@ -15,19 +15,17 @@ export class TaskModalComponent {
    @ViewChild('myModal')
    modal: ModalComponent;
 
-  private uiVars = {modal: false,
-                    };
+  private uiVars = {modal: false, customMessage: null, customInterval: null, customDate: null, subTask: null};
 
-  private displayMessage;
-  private customMessage;
-  private customInterval;
-  private customDate;
-  
   constructor(private store: Store, private reducers: Reducers) {
     store.state.subscribe((nextState)=>{
       if(nextState.tasks.editableTask && !this.uiVars.modal){
         this.modal.open();
         this.uiVars.modal = true; 
+
+        if(!this.uiVars.customMessage) this.uiVars.customMessage = nextState.tasks.editableTask.message;
+        if(!this.uiVars.customInterval) this.uiVars.customInterval = nextState.tasks.editableTask.interval;
+        if(!this.uiVars.customDate) this.uiVars.customDate = nextState.tasks.editableTask.date;
       }
     });
   }
@@ -35,6 +33,9 @@ export class TaskModalComponent {
   private close(){
     this.uiVars.modal = false;
     this.modal.close();
+    this.uiVars.customDate = null;
+    this.uiVars.customInterval = null;
+    this.uiVars.customMessage = "";
     this.reducers.dispatch('EDIT-SELECTED-TASK',null);
   }
 
@@ -42,15 +43,17 @@ export class TaskModalComponent {
   //   return this.selectedTask && this.selectedTask.task !== 'sayHappyBirthdayGmail';
   // }
 
-  saveTask(){
-    //if(this.selectedTask.task === 'sayHappyHolidayGmail'){
-      // var opts = {name: this.subTask, message: this.customMessage};
-      // this.botService.addNewHolidayTask(opts, this.selectedBot);
-    //} else {
-      // this.customMessage? this.selectedTask.message = this.customMessage: 1;
-      // this.customInterval? this.selectedTask.interval = this.customInterval: 1;
-      // this.customDate? this.selectedTask.date = this.customDate: 1;
-   // }
+  save(){
+    var opts;
+    if(this.store.state.getValue().tasks.selectedTask.decorated.holidays){
+      opts = {name: this.uiVars.subTask, message: this.uiVars.customMessage};
+      this.reducers.dispatch('ADD-HOLIDAY-TASK', opts);
+    } else {
+      opts = {message: this.uiVars.customMessage, interval: this.uiVars.customInterval, date: this.uiVars.customDate};
+      this.reducers.dispatch('EDIT-TASK', opts);
+   }
+   this.close();
+   
   }
 
   

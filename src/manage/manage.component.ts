@@ -9,6 +9,8 @@ import { ModalComponent } from 'ng2-bs3-modal/ng2-bs3-modal';
 
 import { Store } from '../shared/store';
 import { Reducers } from '../shared/reducers';
+import { DecoratorService } from '../shared/decorator.service';
+import { ApiService } from '../shared/api.service';
 
 @Component({
   selector: 'manage-component',
@@ -22,7 +24,7 @@ export class ManageComponent {
 
   private uiVars = {};
   
-  constructor(private router: Router,private store: Store, private reducers: Reducers) {
+  constructor(private router: Router,private store: Store, private reducers: Reducers, private decorators: DecoratorService, private apiService: ApiService) {
     store.state.subscribe((nextState)=>{
       if(nextState.bots.userBots.length === 0){
         this.router.navigate(['setup']);
@@ -34,15 +36,23 @@ export class ManageComponent {
   }
 
   private submitAllSettings(): void{
-    //call reducer
-    //show success
+    var bots = JSON.parse(JSON.stringify(this.store.state.getValue().bots.userBots)); 
+    this.decorators.undecorateBots(bots);
+    this.apiService.postBots(bots)
+    .then(function(){
+      console.log('continued')
+    })
+    .then(this.apiService.getBots.bind(this.apiService))
+    .then(function(){
+      console.log('more');
+    })
+    
   }
 
-  private retireBot(bot): void {
-      //call reducer
-      //where to do decorators.undecorate(bots) step? api/reducer/here
-      //make deep copy in apis and call it there so state isn't affected?
-      //this.showSuccess(); 
+  private retireBot(): void {
+      var bot = this.store.state.getValue().bots.selectedBot;
+      this.apiService.deleteBot(bot)
+      .then(this.apiService.getBots.bind(this.apiService));
   }
 
   private sendNow(): void {

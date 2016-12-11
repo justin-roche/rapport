@@ -15,6 +15,7 @@ export class Store {
     bots: {
       botTypes: null,
       selectedBot: null,
+      selectedBotIndex: null,
       userBots: [],
     },
     log: {
@@ -23,6 +24,7 @@ export class Store {
     },
     tasks: {
       editableTask: null,
+      selectedTask: null,
       holidays: null,
       allTasks: null,
     },

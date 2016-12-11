@@ -20,10 +20,10 @@ export class SelectedContactsComponent {
     
   }
 
-  //impelement
-  // createNewContact(contact){
-  //   this.selectedBot.selectedContacts.push(contact);
-  // }
+  
+  createNewContact(contact){
+    this.reducers.dispatch('ADD-NEW-CONTACT',this.uiVars.newContact);
+  }
 
   
 }

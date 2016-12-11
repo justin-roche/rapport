@@ -91,4 +91,23 @@ export class ApiService {
         });
     }
 
+  public postBots(bots){
+    var id = this.store.state.getValue().user.appUserInfo.id; 
+    const body = JSON.stringify({bots: bots});
+    return this.http.put(`/api/bots?userId=${id}`, body, {headers: this.headers})
+    .toPromise()
+  }
+
+  //todo: route must be authenticated
+  public deleteBot(selectedBot){
+    return this.http.delete(`/api/bots?botId=${selectedBot.id}`)
+    .toPromise()
+  }
+
+  public deleteTasks(){
+    const body = JSON.stringify({tasks: []});
+    return this.http.post('/api/tasks', body, this.headers)
+    .toPromise();
+  }
+
 }

@@ -62,8 +62,7 @@ public dispatch(type,payload){
 
       case 'SET-SELECTED-BOT':
         state.bots.selectedBot = payload;
-        //state.manageView.availableContacts = this.decorators.chooseAvailableContacts(state.bots.selectedBot);
-        //state.manageView.selectedContacts = this.decorators.chooseSelectedContacts(state.bots.selectedBot);
+        state.bots.selectedBotIndex = state.bots.userBots.indexOf(payload);
         break;
 
       case 'SET-BOTS': 
@@ -71,6 +70,9 @@ public dispatch(type,payload){
         this.decorators.decorateBots(state.bots.userBots);
         state.log.recent = this.decorators.aggregateRecent(state.bots.userBots)
         state.log.scheduled = this.decorators.aggregateScheduled(state.bots.userBots)
+        if(state.bots.selectedBotIndex !== null){
+          state.bots.selectedBot = state.bots.userBots[state.bots.selectedBotIndex] || null;
+        }
         break;
 
       case 'SET-GMAIL-CONTACTS': 
@@ -97,27 +99,41 @@ public dispatch(type,payload){
         this.decorators.removeFromAvailableContacts(state.bots.selectedBot, payload);
         break;
 
+      case 'ADD-NEW-CONTACT':
+        state.bots.selectedBot.decorated.selectedContacts.push(payload);
+        break;
+
       case 'REMOVE-SELECTED-CONTACT':
         this.decorators.removeFromSelectedContacts(state.bots.selectedBot, payload);
         this.decorators.addToAvailableContacts(state.bots.selectedBot, payload);
         break;
 
+      case 'SET-SELECTED-TASK':
+        state.tasks.selectedTask = payload;
+        break;  
+
       case 'EDIT-SELECTED-TASK':
         state.tasks.editableTask = payload;
         break;
 
+      case 'EDIT-TASK':
+        this.decorators.editTask(state.tasks.selectedTask,payload);
+        break;
+
       case 'ADD-TASK': 
-        // payload.bot.tasks.push(payload.task);
-        // payload.bot.decorated.potentialTasks = payload.bot.decorated.potentialTasks.filter(function(task){
-        //   return task !== payload.task;
-        // });
-        // this.botService.deletedTasks = this.botService.deletedTasks.map(function(task){
-        //   return task.id !== payload.task.id;
-        // })
-        // break;
+        state.bots.selectedBot.tasks.push(payload);
+        this.decorators.removeFromPotentialTasks(state.bots.selectedBot,payload);
+        this.decorators.removeFromDeletedTasks(state.bots.selectedBot,payload);
+        break;
+
+      case 'ADD-HOLIDAY-TASK': 
+        state.bots.selectedBot.tasks.push(this.decorators.createHolidayTask(payload));
+        break;
         
       case 'DELETE-TASK': 
-        //implement
+        state.bots.selectedBot.tasks.splice(state.bots.selectedBot.tasks.indexOf(payload),1);
+        this.decorators.addToPotentialTasks(state.bots.selectedBot,payload);
+        this.decorators.addToDeletedTasks(state.bots.selectedBot,payload);
         break;
 
       default: 
