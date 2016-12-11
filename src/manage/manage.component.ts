@@ -63,7 +63,7 @@ export class ManageComponent {
   }
 
   private sendNow(): void {
-    //call reducer
+    this.apiService.sendNow();
   }
 
   // private showSuccess(){

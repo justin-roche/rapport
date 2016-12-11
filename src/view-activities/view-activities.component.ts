@@ -1,6 +1,6 @@
 import { Component, ViewChild } from '@angular/core';
 import { customBot, gmailContact } from '../shared/custom-type-classes';
-import { BotService } from '../shared/bot.service';
+import { Store } from '../shared/store';
 
 
 @Component({
@@ -22,17 +22,11 @@ export class ActivitiesContainer {
   private subscribedScheduled;
   private subscribedRecent;
 
-  constructor(private botService: BotService){
-    this.getTasks();
-  }
-
-  getTasks() {
-    //this.allScheduled = this.botService.scheduled;
-    //this.allRecent = this.botService.recent;
-    //this.bots = this.botService.userBots;
-
-    this.subscribedRecent = this.allRecent;
-    this.subscribedScheduled = this.allScheduled;
+  constructor(private store: Store){
+     store.state.subscribe((nextState)=>{
+      this.subscribedRecent = nextState.log.recent;
+      this.subscribedScheduled = nextState.log.scheduled;
+    });
   }
 
   botFilter(arrayOfTasks, bot) {

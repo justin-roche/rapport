@@ -110,4 +110,9 @@ export class ApiService {
     .toPromise();
   }
 
+  //testing/demo method
+  public sendNow(){
+    return this.http.get('/api/runalltasks').toPromise();
+  }
+
 }

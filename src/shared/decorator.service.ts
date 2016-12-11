@@ -45,6 +45,10 @@ export class DecoratorService {
       this.addContactsProperties(bot);
       this.addPotentialTasks(bot);
       this.decorateTasks(bot.tasks);
+      if(bot.botActivity){
+        this.decorateTasks(bot.botActivity.recent);
+        this.decorateTasks(bot.botActivity.scheduled);
+      }
     });
   }
 
