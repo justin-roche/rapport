@@ -39,10 +39,7 @@ export class AvailableContactsComponent {
     });
   }
 
-  //implment
-  // createNewContact(contact){
-  //   this.selectedBot.selectedContacts.push(contact);
-  // }
+  
 
  }
 

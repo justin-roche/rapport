@@ -18,6 +18,11 @@ export class TaskModalComponent {
   private uiVars = {modal: false,
                     };
 
+  private displayMessage;
+  private customMessage;
+  private customInterval;
+  private customDate;
+  
   constructor(private store: Store, private reducers: Reducers) {
     store.state.subscribe((nextState)=>{
       if(nextState.tasks.editableTask && !this.uiVars.modal){
