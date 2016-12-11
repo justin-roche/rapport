@@ -36,15 +36,19 @@ export class ManageComponent {
   }
 
   private submitAllSettings(): void{
+
+
+
     var bots = JSON.parse(JSON.stringify(this.store.state.getValue().bots.userBots)); 
     this.decorators.undecorateBots(bots);
+    var deletedTasks = this.decorators.aggregateDeletedTasks(bots);
+    if(deletedTasks.length>0){
+      this.apiService.deleteTasks(deletedTasks)
+    }
     this.apiService.postBots(bots)
-    .then(function(){
-      console.log('continued')
-    })
     .then(this.apiService.getBots.bind(this.apiService))
     .then(function(){
-      console.log('more');
+      //show success
     })
     
   }
@@ -52,7 +56,10 @@ export class ManageComponent {
   private retireBot(): void {
       var bot = this.store.state.getValue().bots.selectedBot;
       this.apiService.deleteBot(bot)
-      .then(this.apiService.getBots.bind(this.apiService));
+      .then(this.apiService.getBots.bind(this.apiService))
+      .then(function(){
+        //show success
+      })
   }
 
   private sendNow(): void {

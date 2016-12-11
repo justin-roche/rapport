@@ -223,7 +223,7 @@ public editTask(task,opts){
 public aggregateDeletedTasks(bots){
     return bots.reduce(function(acc,bot){
       return acc.concat(bot.decorated.deletedTasks);
-    },[]);
+    },[]).map((task)=>task.id);
   }
 
   //<----------------------AGGREGATING RECENT/SCHEDULED TASKS
@@ -262,9 +262,9 @@ public aggregateDeletedTasks(bots){
 
   public transferContacts(bot){
       if(bot.decorated.platform === 'gmail'){
-        bot.selectedContacts = bot.decorated.selectedContacts;
+        bot.selectedContacts = bot.decorated.selectedContacts.slice(0);
       } else {
-        bot.selectedFbFriends = bot.decorated.selectedContacts; 
+        bot.selectedFbFriends = bot.decorated.selectedContacts.slice(0); 
       }
   }
 

@@ -104,9 +104,9 @@ export class ApiService {
     .toPromise()
   }
 
-  public deleteTasks(){
-    const body = JSON.stringify({tasks: []});
-    return this.http.post('/api/tasks', body, this.headers)
+  public deleteTasks(deletedTasks){
+    const body = JSON.stringify({tasks: deletedTasks});
+    return this.http.post('/api/tasks', body, {headers: this.headers})
     .toPromise();
   }
 
