@@ -17,8 +17,4 @@ export class AvailableBotsComponent {
     
   }
 
-  private onSelectBot(bot: any): void {
-    //call reducer
-  }
-
 }

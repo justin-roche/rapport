@@ -27,9 +27,9 @@ export class ActivitiesContainer {
   }
 
   getTasks() {
-    this.allScheduled = this.botService.scheduled;
-    this.allRecent = this.botService.recent;
-    this.bots = this.botService.userBots;
+    //this.allScheduled = this.botService.scheduled;
+    //this.allRecent = this.botService.recent;
+    //this.bots = this.botService.userBots;
 
     this.subscribedRecent = this.allRecent;
     this.subscribedScheduled = this.allScheduled;

@@ -61,7 +61,7 @@ export class SetupComponent {
   }
 
   private createNewBot(bot){
-    this.reducers.dispatch('ADD-NEW-BOT', bot);
+    this.reducers.dispatch('ADD-NEW-BOT', JSON.parse(JSON.stringify(bot)));
     this.router.navigate(['manage']);
   }
 

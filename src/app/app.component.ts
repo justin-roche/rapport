@@ -2,7 +2,7 @@ import { Component,ViewChild, AfterViewInit } from '@angular/core';
 import { Auth } from '../shared/auth.service';
 import { Router } from '@angular/router';
 import { ModalComponent } from 'ng2-bs3-modal/ng2-bs3-modal';
-import { BotService } from '../shared/bot.service';
+import { Store } from '../shared/store';
 
 @Component({
   selector: 'my-app',
@@ -26,7 +26,7 @@ export class AppComponent {
 
   constructor(private auth: Auth,
               private router: Router,
-              private botService: BotService,
+              private store: Store,
               ) {
 
     this.router.events.subscribe(path => {
@@ -54,7 +54,7 @@ export class AppComponent {
   }
 
   hasBot(){
-    return this.botService.userBots && this.botService.userBots.length > 0;
+    return this.store.state.getValue().bots.userBots.length >0;
   }
 
 
