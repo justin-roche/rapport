@@ -22,7 +22,7 @@
                 <td>
                   <div *ngIf="contact">
                     <div [hidden]="contact.editContact" >
-                      <p>{{contact.name}}
+                      <p>{{contact.name || contact.fullName}}
                       <span class="glyphicon glyphicon-remove" (click)="reducers.dispatch('REMOVE-SELECTED-CONTACT',contact)"></span>
                       <span (click)="contact.editContact = true" class="glyphicon glyphicon-pencil"></span>
                       </p>
