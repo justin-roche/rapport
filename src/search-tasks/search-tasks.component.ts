@@ -1,5 +1,4 @@
 import { Component, OnInit, Input} from '@angular/core';
-import { BotService } from '../shared/bot.service';
 import { Store } from '../shared/store';
 import { Reducers } from '../shared/reducers';
 

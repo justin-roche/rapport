@@ -9,7 +9,6 @@ import { AUTH_PROVIDERS }      from 'angular2-jwt';
 import { LogInGuard } from '../shared/logged-in.guard';
 import { AuthGuard } from '../shared/auth.guard';
 import { Auth0CallbackGuard } from '../shared/auth0.guard';
-import { BotService }         from '../shared/bot.service';
 import { Auth } from '../shared/auth.service';
 import { FbService } from '../shared/fb.service';
 
@@ -65,7 +64,6 @@ import { DecoratorService } from '../shared/decorator.service';
   providers: [
     { provide: 'Window',  useValue: window },
     //{provide: LocationStrategy, useClass: HashLocationStrategy},
-    BotService,
     Auth,
     Store,
     Reducers,

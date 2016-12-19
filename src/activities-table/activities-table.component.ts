@@ -1,6 +1,5 @@
 import { Component, ViewChild, Input } from '@angular/core';
 import { customBot, gmailContact } from '../shared/custom-type-classes';
-import { BotService } from '../shared/bot.service';
 
 @Component({
   selector: 'ActivitiesTable',
@@ -18,5 +17,5 @@ export class ActivitiesTable {
   @Input() bots: Array<customBot>;
   @Input() clickFunction;
 
-  constructor(private botService: BotService) {}
+  constructor() {}
 }

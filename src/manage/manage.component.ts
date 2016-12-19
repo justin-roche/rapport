@@ -22,72 +22,6 @@ export class ManageComponent {
 
   title = 'My Bots';
 
-<<<<<<< HEAD
-  private bots: Array<customBot>;
-  private selectedBot: customBot;
-  private selectedTask;
-  private subTask;
-  private displayMessage;
-  private customMessage;
-  private customInterval;
-  private customDate;
-  private activities: Array<string>;
-  private contacts: Array<gmailContact>;
-  private tasks: Array<string>;
-  private mode = "bot";
-  private scheduled;
-  private editabelName;
-  private customBotName;
-  private recent; 
-  private uiVars = {newContact:{name: "", string: ""},
-                    editContact: "",
-                    success: false,
-                    };
-  //
-  constructor(private botService: BotService,
-              private gmailService: GmailService,
-              private router: Router,
-              private store: Store) {
-
-   var self = this;
-   botService.state.subscribe(function(state){
-     console.log(state);
-   })
-
-
-  }
-
-   //<-------------------DISPLAY MODE------------------->
-  pageMode(mode){
-    this.mode = mode;
-  }
-
-  //<-------------------TASK METHODS------------------->
-  close() {
-    this.modal.close();
-    this.selectedTask = null;
-  }
-
-  saveTask(){
-    if(this.selectedTask.task === 'sayHappyHolidayGmail'){
-      var opts = {name: this.subTask, message: this.customMessage};
-      this.botService.addNewHolidayTask(opts, this.selectedBot);
-    } else {
-      this.customMessage? this.selectedTask.message = this.customMessage: 1;
-      this.customInterval? this.selectedTask.interval = this.customInterval: 1;
-      this.customDate? this.selectedTask.date = this.customDate: 1;
-    }
-    this.reload();
-    this.tasks = this.selectedBot.tasks;
-  }
-
-  open(task) {
-    this.selectedTask = task;
-    this.customMessage = this.selectedTask.message;
-    this.customInterval = this.selectedTask.interval;
-    this.customDate = this.selectedTask.date;
-    this.modal.open();
-=======
   private uiVars = {};
   
   constructor(private router: Router,private store: Store, private reducers: Reducers, private decorators: DecoratorService, private apiService: ApiService) {
@@ -99,27 +33,10 @@ export class ManageComponent {
         this.reducers.dispatch('SET-SELECTED-BOT', nextState.bots.userBots[0]);
       }
     });
->>>>>>> cleanup
   }
 
   private submitAllSettings(): void{
-
-
-<<<<<<< HEAD
-  private onSelectBot(bot: any): void {
-    this.botService.selectBot(bot);
-  }
-
-  private submitAllSettings(): void{
-    var self = this;
-    this.botService.updateBots(this.bots).then(_=>{
-      this.reload();
-      if(!this.selectedBot.id){
-        this.selectedBot = this.bots[this.bots.length-1];
-      }
-      this.showSuccess(); 
-=======
-
+    
     var bots = JSON.parse(JSON.stringify(this.store.state.getValue().bots.userBots)); 
     this.decorators.undecorateBots(bots);
     var deletedTasks = this.decorators.aggregateDeletedTasks(bots);
@@ -130,7 +47,6 @@ export class ManageComponent {
     .then(this.apiService.getBots.bind(this.apiService))
     .then(function(){
       //show success
->>>>>>> cleanup
     })
     
   }

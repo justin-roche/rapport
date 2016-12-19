@@ -8,7 +8,6 @@ import 'rxjs/add/operator/take';
 import 'rxjs/add/operator/toPromise';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/catch';
-import { BotService } from './bot.service';
 import { gmailContact } from '../shared/custom-type-classes';
 import { FbService } from '../shared/fb.service';
 import { Store } from '../shared/store';
@@ -19,17 +18,12 @@ declare var Auth0Lock: any;
 
 @Injectable()
 export class Auth {
-<<<<<<< HEAD
-  private lock = new Auth0Lock('pA75v0B8UDfNOk0h2tDnz5in4Je3AZHL', 'rapport.auth0.com', {});
-=======
+
 
   private fbAuthenticated;
 
   lock = new Auth0Lock('pA75v0B8UDfNOk0h2tDnz5in4Je3AZHL', 'rapport.auth0.com', {});
-  constructor(private apiService: ApiService, private reducers: Reducers, private store: Store, private http: Http, private router:Router, private botService: BotService, private fbService: FbService) {
->>>>>>> cleanup
-
-  constructor(private http: Http, private router:Router, private botService: BotService, private gmailService: GmailService, private fbService: FbService) {
+  constructor(private apiService: ApiService, private reducers: Reducers, private store: Store, private http: Http, private router:Router, private fbService: FbService) {
     this.lock.on("authenticated", (authResult) => {
       localStorage.setItem('id_token', authResult.idToken);
       this.router.navigate(['loading']);
@@ -47,24 +41,7 @@ export class Auth {
   };
 
   public onAuthentication(authResult) {
-<<<<<<< HEAD
-    api.service.signIn(authResult)
-    .then(this.setToken)
-    .then(this.userActions.getInitialData)
-    .then(this.fbActions.tryContacts)
-    .then(this.redirectForUserType);
-  }
-
-  private setToken(userInfo){
-    localStorage.setItem('user_id',userInfo.id);
-  }
-
-  public redirectForUserType(userObj) {
-    if(userObj.newUser || this.botService.userBots.length===0){
-=======
-
     //call api servers which call dispatch on their results
-
     //execute all of these in series
     
     this.reducers.dispatch('SET-AUTH-RESULT',authResult);
@@ -83,7 +60,6 @@ export class Auth {
     var userBots = this.store.state.getValue().bots.userBots;
 
     if(userObj.newUser || userBots.length===0){
->>>>>>> cleanup
       this.router.navigate(['setup']);
     } else {
       this.router.navigate(['manage']);
@@ -102,11 +78,6 @@ export class Auth {
   //     return this.http.post('/signIn', body, {headers: headers})
   //       .map(res => res.json()).toPromise();
   // }
-
-
-  
-
- 
 
   public authenticated() {
     return tokenNotExpired();

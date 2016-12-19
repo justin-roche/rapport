@@ -4,31 +4,8 @@ import { Injectable }      from '@angular/core';
 @Injectable()
 export class Store {
 
-<<<<<<< HEAD
-   private initialState = {
-    userData: {
-      token: null,
-      id: null,
-      authenticated: null,
-    },
-    bots: {
-      userBots: null,
-      selectedBot: null,
-    },
-    contacts: {
-      availableGmailContacts: null,
-      availableFbContacts: null,
-      availableContacts: null,
-      selectedContact: null,
-      removedContact: null,
-    },
-    tasks: {
-      deletedTasks: null,
-      selectedTasks: null,
-      recentActivities: null,
-      scheduledActivities: null,
-=======
-  private initialState = {
+
+private initialState = {
     user: {
       authResult: null,
       appUserInfo: null,
@@ -58,30 +35,14 @@ export class Store {
     manageView: {
       // availableContacts: null,
       // selectedContacts: null,
->>>>>>> cleanup
     }
   }
 
   public state = new BehaviorSubject(this.initialState);
-<<<<<<< HEAD
-=======
-  state$ = this.state.asObservable();
-  private _state; 
-  private userId;
->>>>>>> cleanup
 
   constructor(){
 
   }
 
-<<<<<<< HEAD
-  public setState(_state){
-      this.state.next(_state);
-=======
-  public trigger(){
-    var state = this.state.getValue();
-    this.state.next(state);
->>>>>>> cleanup
-  }
 
 }
