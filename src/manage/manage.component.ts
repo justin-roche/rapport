@@ -1,16 +1,16 @@
 import { Component, ViewChild } from '@angular/core';
-import { customBot, gmailContact } from '../shared/custom-type-classes';
-//change
-import { BotService } from '../shared/bot.service';
 import { OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import {GmailService} from '../shared/gmail.service';
-import {FbService} from '../shared/fb.service';
 
 import { ContactComponent } from '../contact/contact.component';
-import { SearchComponent } from '../search/search.component';
+import { AvailableContactsComponent } from '../available/available.component';
+import { SearchTasksComponent } from '../search-tasks/search-tasks.component';
 import { ModalComponent } from 'ng2-bs3-modal/ng2-bs3-modal';
+
 import { Store } from '../shared/store';
+import { Reducers } from '../shared/reducers';
+import { DecoratorService } from '../shared/decorator.service';
+import { ApiService } from '../shared/api.service';
 
 @Component({
   selector: 'manage-component',
@@ -20,13 +20,9 @@ import { Store } from '../shared/store';
 
 export class ManageComponent {
 
-  @ViewChild('myModal')
-  modal: ModalComponent;
-
-
-
   title = 'My Bots';
 
+<<<<<<< HEAD
   private bots: Array<customBot>;
   private selectedBot: customBot;
   private selectedTask;
@@ -91,14 +87,25 @@ export class ManageComponent {
     this.customInterval = this.selectedTask.interval;
     this.customDate = this.selectedTask.date;
     this.modal.open();
+=======
+  private uiVars = {};
+  
+  constructor(private router: Router,private store: Store, private reducers: Reducers, private decorators: DecoratorService, private apiService: ApiService) {
+    store.state.subscribe((nextState)=>{
+      if(nextState.bots.userBots.length === 0){
+        this.router.navigate(['setup']);
+      }
+      if(nextState.bots.userBots.length >0 && !nextState.bots.selectedBot) {
+        this.reducers.dispatch('SET-SELECTED-BOT', nextState.bots.userBots[0]);
+      }
+    });
+>>>>>>> cleanup
   }
 
-   private canSetDate(){
-    return this.selectedTask && this.selectedTask.task !== 'sayHappyBirthdayGmail';
-  }
+  private submitAllSettings(): void{
 
-  //<-------------------BOT METHODS------------------->
 
+<<<<<<< HEAD
   private onSelectBot(bot: any): void {
     this.botService.selectBot(bot);
   }
@@ -111,68 +118,46 @@ export class ManageComponent {
         this.selectedBot = this.bots[this.bots.length-1];
       }
       this.showSuccess(); 
-    })
-  }
+=======
 
-  private showSuccess(){
-    var self = this;
-    this.uiVars.success = true;
-    setTimeout(function(){
-      self.uiVars.success = false;
-    },1000);
-  }
-
-  private retireBot(bot): void {
-    var self =this;
-    this.botService.retireBot(this.selectedBot).then(_=>{
-      this.reload();
-      if(this.bots.length === 0){
-        self.router.navigate(['setup']);
-      } else {
-        this.showSuccess(); 
-      }
-    })
-  }
-
-  //<-----------------ADD CONTACTS METHODS----------------->
-
-  createNewContact(contact){
-    this.selectedBot.selectedContacts.push(contact);
-  }
-
-  //<-----------------SELECTED CONTACTS METHODS----------------->
-
-  private removeSelectedContact(contact): void{
-    var i = this.contacts.indexOf(contact);
-    this.contacts.splice(i,1);
-    if(this.selectedBot.botType === 'social'){
-      this.botService.removeSelectedFbContact(contact).then(_=>{
-        this.reload();
-      })
-    } else {
-      this.botService.removeSelectedContact(contact).then(_=>{
-        this.reload();
-      })
+    var bots = JSON.parse(JSON.stringify(this.store.state.getValue().bots.userBots)); 
+    this.decorators.undecorateBots(bots);
+    var deletedTasks = this.decorators.aggregateDeletedTasks(bots);
+    if(deletedTasks.length>0){
+      this.apiService.deleteTasks(deletedTasks)
     }
+    this.apiService.postBots(bots)
+    .then(this.apiService.getBots.bind(this.apiService))
+    .then(function(){
+      //show success
+>>>>>>> cleanup
+    })
+    
+  }
+
+  private retireBot(): void {
+      var bot = this.store.state.getValue().bots.selectedBot;
+      this.apiService.deleteBot(bot)
+      .then(this.apiService.getBots.bind(this.apiService))
+      .then(function(){
+        //show success
+      })
   }
 
   private sendNow(): void {
-    this.botService.sendNow()
-      .then(console.log);
+    this.apiService.sendNow();
   }
 
-  private reload() : void {
-    this.scheduled = this.botService.scheduled;
-    this.recent = this.botService.recent;
-    this.bots = this.botService.userBots;
-    if(this.selectedBot){
-      this.tasks = this.selectedBot.tasks;
-    }
-  }
+  // private showSuccess(){
+  //   var self = this;
+  //   this.uiVars.success = true;
+  //   setTimeout(function(){
+  //     self.uiVars.success = false;
+  //   },1000);
+  // }
 
-  private ngOnInit(): void {
-    this.reload();
-    this.onSelectBot(this.bots[0]);
+  ngOnInit(){
+    
   }
 
 }

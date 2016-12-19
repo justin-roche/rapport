@@ -1,11 +1,8 @@
 import { Component,ViewChild, AfterViewInit } from '@angular/core';
 import { Auth } from '../shared/auth.service';
 import { Router } from '@angular/router';
-import { SearchComponent } from '../search/search.component';
-//import { ModalComponent } from 'ng2-bs3-modal/src/ng2-bs3-modal/ng2-bs3-modal';
-//import { ModalResult } from 'ng2-bs3-modal/ng2-bs3-modal';
 import { ModalComponent } from 'ng2-bs3-modal/ng2-bs3-modal';
-import { BotService } from '../shared/bot.service';
+import { Store } from '../shared/store';
 
 @Component({
   selector: 'my-app',
@@ -13,16 +10,15 @@ import { BotService } from '../shared/bot.service';
   providers: [Auth],
   template: `
     <nav>
-        <a *ngIf="authenticated()" routerLink="/setup" routerLinkActive="active">Choose A Bot</a>
+        <a *ngIf="authenticated()" routerLink="/setup" routerLinkActive="active">Add A Bot</a>
         <a *ngIf="authenticated() && hasBot()" routerLink="/manage" routerLinkActive="active">Manage Bots</a>
         <a *ngIf="authenticated()" routerLink="/view-activities" routerLinkActive="active">View Activities</a>
-        <a (click)="test()">Test</a>
         <a *ngIf="authenticated()" routerLink="/logout" routerLinkActive="active" class="right">Logout</a>
-        <a class='login' *ngIf="!authenticated()" class="right" (click)="login()">Login</a>
+        
     </nav>
     <router-outlet></router-outlet>
   `,
-
+// <a class='login' *ngIf="!authenticated()" class="right" (click)="login()">Login</a>
 })
 
 
@@ -30,7 +26,7 @@ export class AppComponent {
 
   constructor(private auth: Auth,
               private router: Router,
-              private botService: BotService,
+              private store: Store,
               ) {
 
     this.router.events.subscribe(path => {
@@ -58,7 +54,7 @@ export class AppComponent {
   }
 
   hasBot(){
-    return this.botService.userBots && this.botService.userBots.length > 0;
+    return this.store.state.getValue().bots.userBots.length >0;
   }
 
 

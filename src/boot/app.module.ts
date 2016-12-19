@@ -11,25 +11,31 @@ import { AuthGuard } from '../shared/auth.guard';
 import { Auth0CallbackGuard } from '../shared/auth0.guard';
 import { BotService }         from '../shared/bot.service';
 import { Auth } from '../shared/auth.service';
-import { GmailService } from '../shared/gmail.service';
 import { FbService } from '../shared/fb.service';
 
 import { Ng2Bs3ModalModule } from 'ng2-bs3-modal/ng2-bs3-modal';
 import { AppRoutingModule }     from '../routing/app.routing.module';
 import { AppComponent }        from '../app/app.component';
 import { LandingPageComponent }   from '../landing-page/landing-page.component';
-import { GmailLoginComponent }    from '../gmail-login/gmail-login.component';
 import { SetupComponent }    from '../setup/setup.component';
 import { ManageComponent }    from '../manage/manage.component';
+import { TaskModalComponent }    from '../task-modal/task-modal.component';
 import { ContactComponent }    from '../contact/contact.component';
 import { HomePageComponent } from '../home-page/home.component';
-import { SearchComponent } from '../search/search.component';
-import { FilterContacts } from '../search/contact.pipe';
+import { AvailableBotsComponent } from '../available-bots/available-bots.component';
+import { AvailableContactsComponent } from '../available/available.component';
+import { SelectedContactsComponent } from '../selected/selected.component';
+import { SearchTasksComponent } from '../search-tasks/search-tasks.component';
+import { FilterContacts } from '../available/contact.pipe';
 import { LoadingComponent } from '../loading/loading.component';
 import { ActivitiesTable } from '../activities-table/activities-table.component';
 import { ActivitiesContainer } from '../view-activities/view-activities.component';
 
 import { Store } from '../shared/store';
+import { Reducers } from '../shared/reducers';
+import { ApiService } from '../shared/api.service';
+import { DecoratorService } from '../shared/decorator.service';
+
 
 @NgModule({
   imports: [
@@ -45,11 +51,14 @@ import { Store } from '../shared/store';
     HomePageComponent,
     AppComponent,
     LandingPageComponent,
-    GmailLoginComponent,
     SetupComponent,
     ManageComponent,
+    TaskModalComponent,
     ContactComponent,
-    SearchComponent,
+    AvailableBotsComponent,
+    AvailableContactsComponent,
+    SelectedContactsComponent,
+    SearchTasksComponent,
     FilterContacts,
     LoadingComponent
   ],
@@ -59,8 +68,10 @@ import { Store } from '../shared/store';
     BotService,
     Auth,
     Store,
-    GmailService,
+    Reducers,
+    ApiService,
     FbService,
+    DecoratorService,
     LogInGuard,
     AuthGuard,
     Auth0CallbackGuard,

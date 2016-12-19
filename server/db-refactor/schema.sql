@@ -10,7 +10,6 @@
 --
 -- ---
 DROP DATABASE IF EXISTS rapport;
-DROP DATABASE rapport;
 CREATE DATABASE rapport;
 USE rapport;
 

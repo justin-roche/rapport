@@ -1,0 +1,43 @@
+<modal #myModal>
+      <div id="modal-style">
+
+        <div class="semi-header">
+          <h2>EDIT TASK:</h2>
+        </div>
+
+        <div *ngIf="(store.state | async)?.tasks.selectedTask 
+                    && (store.state | async)?.tasks.selectedTask.decorated.holidays === true" 
+                    class="form-group">
+          <select class="selectpicker" [(ngModel)]="uiVars.subTask">
+            <p>holiday name</p>
+            <option *ngFor="let holiday of (store.state | async)?.tasks.holidays">
+              {{holiday.name}}
+            </option>
+          </select>
+        </div>
+
+        <div>
+          <span>Custom message:</span>
+          <textarea class="text" [(ngModel)]="uiVars.customMessage"></textarea>
+        </div>
+
+        <div *ngIf="(store.state | async)?.tasks.selectedTask 
+                    && (store.state | async)?.tasks.selectedTask.decorated.setsDate" class="form-group">
+          <span>Start Date</span>
+          <input class="selectBday" type="date" style="width:170px; border: 0px;" [(ngModel)]="uiVars.customDate"/>
+        </div>
+
+        <div *ngIf="selectedTask && selectedTask.decorated.setsInterval" class="form-group">
+          <span>Send message every</span>
+          <input class="fb-input" type="text" [(ngModel)]="uiVars.customInterval">
+          <span>months</span>
+        </div>
+
+        <div class="buttons" style="float: right">
+          <button class="retire" (click)="close()">Cancel</button>
+          <button class="save-bots" (click)="save();">OK</button>
+        </div>
+
+      </div>
+</modal>
+    

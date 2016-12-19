@@ -41,7 +41,7 @@
       </div>
     </modal>
 
-    <modal #powerModal>
+    <!--<modal #powerModal>
       <div id="modal-style-power">
 
         <div class="semi-header">
@@ -63,10 +63,10 @@
         </div>
 
       </div>
-    </modal>
+    </modal>-->
 
 
-  <div id="container-header">
+  <!--<div id="container-header">
 
     <div id="title-section" >
       ADD A BOT
@@ -76,12 +76,12 @@
       Each bot is pre-configured with basic tasks to suite each type of user
     </div>
 
-  </div>
+  </div>-->
 
 
 <div class="container container-botType">
     <div class="row">
-      <a (click)="handleClick(bots[0])" class="col-4">
+      <a (click)="selectBot(bots[0])" class="col-4">
         <div class="box-choose-bot-basic">
           <div class="img-bot-icon-main">
             <img src="http://i.imgur.com/emScEHM.png">
@@ -103,7 +103,7 @@
         </div>
 
       </a>
-      <a (click)="handleClick(bots[1])" class="col-4">
+      <a (click)="selectBot(bots[1])" class="col-4">
 
         <div class="box-choose-bot-social">
            <div class="img-bot-icon-main" >
@@ -124,7 +124,7 @@
         </div>
 
       </a>
-      <a (click)="handleClick(bots[2])" class="col-4">
+      <a (click)="selectBot(bots[2])" class="col-4">
 
         <div class="box-choose-bot-power">
 
